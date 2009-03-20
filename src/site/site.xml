@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="JPA-XJC">
+  <skin>
+    <groupId>org.apache.maven.skins</groupId>
+    <artifactId>maven-classic-skin</artifactId>
+    <version>1.0</version>
+  </skin>
+  <body>
+    <head>
+      <meta name="keywords" lang="de" content="JPA, XJC, JAXB, persistence, annotations, plugin"/>
+      <meta name="keywords" lang="en" content="JPA, XJC, JAXB, persistence, annotations, plugin"/>
+    </head>
+
+    <menu name="Sourceforge">
+      <item name="Project Summary" href="https://sourceforge.net/projects/jpa-xjc/"/>
+      <item name="Download" href="https://sourceforge.net/project/showfiles.php?group_id=256748"/>
+    </menu>
+
+    <menu ref="reports" />
+
+  </body>
+</project>
