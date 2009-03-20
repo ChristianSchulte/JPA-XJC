@@ -178,17 +178,17 @@ public final class PluginImpl extends Plugin
     @Override
     public String getOptionName()
     {
-        return "jpa2";
+        return "jpa";
     }
 
     @Override
     public int parseArgument( final Options opt, final String[] args, int i )
         throws BadCommandLineException, IOException
     {
-        if ( args[i].equals( "-jpa2" ) )
+        if ( args[i].equals( "-jpa" ) )
         {
-            this.persistenceUnitName = opt.requireArgument( "-jpa2", args, ++i );
-            this.persistenceUnitRoot = new File( opt.requireArgument( "-jpa2", args, ++i ) );
+            this.persistenceUnitName = opt.requireArgument( "-jpa", args, ++i );
+            this.persistenceUnitRoot = new File( opt.requireArgument( "-jpa", args, ++i ) );
             return 3;
         }
 
