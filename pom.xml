@@ -1,14 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<!--
+
+       Copyright 2009 Christian Schulte <cs@schulte.it>
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.sourceforge.jpaxjc</groupId>
   <artifactId>jpa-xjc-plugin</artifactId>
   <packaging>jar</packaging>
   <name>JPA-XJC</name>
-  <version>1.0-alpha-2-SNAPSHOT</version>
+  <version>1.0-beta-1-SNAPSHOT</version>
   <description><![CDATA[
   JAXB 2.1 Schema to Java compiler plugin for annotating schema derived classes
-  with Java persistence annotations.]]></description>
+  with Java persistence annotations.]]>
+  </description>
   <url>http://jpaxjcplugin.sourceforge.net/${pom.version}</url>
   <inceptionYear>2009</inceptionYear>
   <organization>
@@ -57,13 +77,6 @@
     <resources>
       <resource>
         <directory>src/main/resources</directory>
-      </resource>
-      <resource>
-        <directory>${basedir}</directory>
-        <targetPath>META-INF</targetPath>
-        <includes>
-          <include>LICENSE-2.0.txt</include>
-        </includes>
       </resource>
     </resources>
     <pluginManagement>
@@ -120,7 +133,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-release-plugin</artifactId>
-          <version>2.0-beta-8</version>
+          <version>2.0-beta-9</version>
           <configuration>
             <tagBase>https://jpaxjcplugin.svn.sourceforge.net/svnroot/jpaxjcplugin/tags</tagBase>
           </configuration>
@@ -157,7 +170,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-install-plugin</artifactId>
-          <version>2.2</version>
+          <version>2.3</version>
         </plugin>
         <plugin>
           <groupId>com.sun.tools.xjc.maven2</groupId>
@@ -212,9 +225,29 @@
             </execution>
           </executions>
         </plugin>
+        <plugin>
+          <artifactId>maven-remote-resources-plugin</artifactId>
+          <version>1.0</version>
+          <executions>
+            <execution>
+              <id>process</id>
+              <goals>
+                <goal>process</goal>
+              </goals>
+            </execution>
+          </executions>
+          <configuration>
+            <resourceBundles>
+              <resourceBundle>org.apache:apache-jar-resource-bundle:1.4</resourceBundle>
+            </resourceBundles>
+          </configuration>
+        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
+      <plugin>
+        <artifactId>maven-remote-resources-plugin</artifactId>
+      </plugin>
       <plugin>
         <artifactId>buildnumber-maven-plugin</artifactId>
         <groupId>org.codehaus.mojo</groupId>

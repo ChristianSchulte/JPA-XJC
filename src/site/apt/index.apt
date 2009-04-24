@@ -14,110 +14,7 @@ Introduction
   The plugin provides a -jpa option which is enabled by adding its jar file to
   the XJC classpath. That option takes two parameters. The first parameter is
   the name of the persistence unit and the second parameter is a path to the
-  corresponding persistence unit root directory files are written to. Maven 2
-  users simply add the JPA-XJC plugin as a dependency to a JAXB plugin of
-  choice.
-
----
-
-<plugin>
-  <groupId>com.sun.tools.xjc.maven2</groupId>
-  <artifactId>maven-jaxb-plugin</artifactId>
-  <version>1.1</version>
-  <dependencies>
-    <dependency>
-      <groupId>javax.xml.bind</groupId>
-      <artifactId>jaxb-api</artifactId>
-      <version>2.1</version>
-    </dependency>
-    <dependency>
-      <groupId>com.sun.xml.bind</groupId>
-      <artifactId>jaxb-impl</artifactId>
-      <version>2.1.10</version>
-    </dependency>
-    <dependency>
-      <groupId>com.sun.xml.bind</groupId>
-      <artifactId>jaxb-xjc</artifactId>
-      <version>2.1.10</version>
-    </dependency>
-    <dependency>
-      <groupId>net.sourceforge.jpaxjc</groupId>
-      <artifactId>jpa-xjc-plugin</artifactId>
-      <version>1.0-alpha-1</version>
-    </dependency>
-  </dependencies>
-  <executions>
-    <execution>
-      <id>generate</id>
-      <phase>generate-sources</phase>
-      <goals>
-        <goal>generate</goal>
-      </goals>
-      <configuration>
-        <schemaDirectory>src/main/schemas</schemaDirectory>
-        <args>-jpa "${pom.artifactId}" "${pom.build.outputDirectory}"</args>
-        <extension>true</extension>
-      </configuration>
-    </execution>
-  </executions>
-</plugin>
-
----
-
-  Note: The plugin shown above is not available in the repository Maven 2 uses
-  by default. You will have to add the java.net repositories to your POM.
-
----
-
-<repositories>
-  <repository>
-    <id>maven1-repository.dev.java.net</id>
-    <url>http://download.java.net/maven/1</url>
-    <layout>legacy</layout>
-    <releases>
-      <enabled>true</enabled>
-    </releases>
-    <snapshots>
-      <enabled>false</enabled>
-    </snapshots>
-  </repository>
-  <repository>
-    <id>maven2-repository.dev.java.net</id>
-    <url>http://download.java.net/maven/2</url>
-    <releases>
-      <enabled>true</enabled>
-    </releases>
-    <snapshots>
-      <enabled>false</enabled>
-    </snapshots>
-  </repository>
-</repositories>
-
-<pluginRepositories>
-  <pluginRepository>
-    <id>maven1-repository.dev.java.net</id>
-    <url>http://download.java.net/maven/1</url>
-    <layout>legacy</layout>
-    <releases>
-      <enabled>true</enabled>
-    </releases>
-    <snapshots>
-      <enabled>false</enabled>
-    </snapshots>
-  </pluginRepository>
-  <pluginRepository>
-    <id>maven2-repository.dev.java.net</id>
-    <url>http://download.java.net/maven/2</url>
-    <releases>
-      <enabled>true</enabled>
-    </releases>
-    <snapshots>
-      <enabled>false</enabled>
-    </snapshots>
-  </pluginRepository>
-</pluginRepositories>
-
----
+  corresponding persistence unit root directory files are written to.
 
 Customizations
 
@@ -165,7 +62,7 @@ Customizations
 
 Support
 
-  Development of JPA-XJC is driven by its community. Please file any issues with
-  the {{{https://apps.sourceforge.net/mantisbt/jpaxjcplugin/}MantisBT}} bugracker
-  or subscribe to the {{{mail-lists.html}jpaxjcplugin-users}} mailing list for
-  discussing issues or asking questions.
+  Development of JPA-XJC is driven by the community. Please file any issues with
+  the {{{https://apps.sourceforge.net/mantisbt/jpaxjcplugin/}MantisBT}}
+  bugracker or subscribe to the {{{mail-lists.html}jpaxjcplugin-users}} mailing
+  list for discussing issues or asking questions.
