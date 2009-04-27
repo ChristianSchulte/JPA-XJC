@@ -9,7 +9,7 @@ March 2009
 Maven Information
 
   Maven users simply add the JPA-XJC plugin as a dependency to a JAXB plugin of
-  choice. For this to work, the JPA-XJC repository needs to put in a POM or
+  choice. For this to work, the JPA-XJC repository needs to be put in a POM or
   the Maven settings.xml.
 
 ---
