@@ -378,6 +378,49 @@
       <url>scp://shell.sourceforge.net/home/groups/j/jp/jpaxjcplugin/htdocs/${pom.version}</url>
     </site>
   </distributionManagement>
+  <profiles>
+    <profile>
+      <id>create-sourceforge-shell</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>1.3</version>
+            <dependencies>
+              <dependency>
+                <groupId>org.apache.ant</groupId>
+                <artifactId>ant-jsch</artifactId>
+                <version>1.7.1</version>
+              </dependency>
+            </dependencies>
+            <executions>
+              <execution>
+                <id>create-sourceforge-shell</id>
+                <phase>validate</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <tasks>
+                    <sshexec host="shell.sourceforge.net"
+                             username="${jpaxjcplugin.ssh.username},jpaxjcplugin"
+                             password="${jpaxjcplugin.ssh.password}"
+                             command="create"
+                             timeout="300000"/>
+
+                  </tasks>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
   <properties>
     <jaxbApiVersion>2.1</jaxbApiVersion>
     <jaxbImplVersion>2.1.10</jaxbImplVersion>
