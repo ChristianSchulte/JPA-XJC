@@ -43,8 +43,8 @@ Maven Information
 
 Example
 
-  The following example demonstrates the use of JPA-XJC with the Java.net
-  maven-jaxb-plugin.
+  The following example demonstrates the use of the JPA-XJC Plugin with the
+  Java.net maven-jaxb-plugin.
 
 ---
 
