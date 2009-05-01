@@ -32,29 +32,56 @@
       <filtered>false</filtered>
     </file>
     <file>
-      <source>src/site/apt/index.apt</source>
-      <outputDirectory>/</outputDirectory>
-      <destName>README.txt</destName>
+      <source>${project.build.directory}/maven-shared-archive-resources/META-INF/DEPENDENCIES</source>
+      <outputDirectory>/lib</outputDirectory>
       <fileMode>0644</fileMode>
       <lineEnding>dos</lineEnding>
       <filtered>false</filtered>
     </file>
     <file>
-      <source>src/site/apt/maven.apt</source>
+      <source>${project.build.directory}/generated-site/pdf/jpa-xjc-manual/jpa-xjc-manual.pdf</source>
+      <destName>JPA-XJC Manual ${pom.version}.pdf</destName>
       <outputDirectory>/</outputDirectory>
-      <destName>MAVEN.txt</destName>
       <fileMode>0644</fileMode>
-      <lineEnding>dos</lineEnding>
+      <filtered>false</filtered>
+    </file>
+    <file>
+      <source>${project.build.directory}/generated-site/rtf/jpa-xjc-manual/jpa-xjc-manual.rtf</source>
+      <destName>JPA-XJC Manual ${pom.version}.rtf</destName>
+      <outputDirectory>/</outputDirectory>
+      <fileMode>0644</fileMode>
+      <filtered>false</filtered>
+    </file>
+    <file>
+      <source>${project.build.directory}/generated-site/xhtml/jpa-xjc-manual/jpa-xjc-manual.xhtml</source>
+      <destName>JPA-XJC Manual ${pom.version}.html</destName>
+      <outputDirectory>/</outputDirectory>
+      <fileMode>0644</fileMode>
       <filtered>false</filtered>
     </file>
   </files>
   <dependencySets>
     <dependencySet>
+      <outputDirectory>/</outputDirectory>
       <fileMode>0755</fileMode>
       <excludes>
         <exclude>javax.persistence:persistence-api</exclude>
         <exclude>javax.annotation:jsr250-api</exclude>
       </excludes>
+    </dependencySet>
+    <dependencySet>
+      <outputDirectory>/lib</outputDirectory>
+      <fileMode>0755</fileMode>
+      <includes>
+        <include>javax.persistence:persistence-api</include>
+      </includes>
+    </dependencySet>
+    <dependencySet>
+      <outputDirectory>/lib/optional</outputDirectory>
+      <fileMode>0755</fileMode>
+      <includes>
+        <include>javax.annotation:jsr250-api</include>
+      </includes>
     </dependencySet>
   </dependencySets>
 </assembly>

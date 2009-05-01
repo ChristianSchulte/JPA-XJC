@@ -48,7 +48,7 @@
   </developers>
   <issueManagement>
     <system>MantisBT</system>
-    <url>https://apps.sourceforge.net/mantisbt/jpa-xjc/</url>
+    <url>https://apps.sourceforge.net/mantisbt/jpaxjcplugin/</url>
   </issueManagement>
   <mailingLists>
     <mailingList>
@@ -240,6 +240,66 @@
             </resourceBundles>
           </configuration>
         </plugin>
+        <plugin>
+          <artifactId>maven-source-plugin</artifactId>
+          <version>2.1</version>
+          <configuration>
+            <archive>
+              <index>true</index>
+              <addMavenDescriptor>false</addMavenDescriptor>
+              <compress>true</compress>
+              <manifestEntries>
+                <Build-Date>${buildNumber}</Build-Date>
+              </manifestEntries>
+            </archive>
+          </configuration>
+        </plugin>
+        <plugin>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>2.5</version>
+          <configuration>
+            <archive>
+              <index>true</index>
+              <addMavenDescriptor>false</addMavenDescriptor>
+              <compress>true</compress>
+              <manifestEntries>
+                <Build-Date>${buildNumber}</Build-Date>
+              </manifestEntries>
+            </archive>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.doxia</groupId>
+          <artifactId>doxia-maven-plugin</artifactId>
+          <version>1.1</version>
+          <executions>
+            <execution>
+              <phase>package</phase>
+              <goals>
+                <goal>render-books</goal>
+              </goals>
+            </execution>
+          </executions>
+          <configuration>
+            <books>
+              <book>
+                <directory>src/site/apt</directory>
+                <descriptor>src/main/books/jpa-xjc-manual.xml</descriptor>
+                <formats>
+                  <format>
+                    <id>pdf</id>
+                  </format>
+                  <format>
+                    <id>rtf</id>
+                  </format>
+                  <format>
+                    <id>xhtml</id>
+                  </format>
+                </formats>
+              </book>
+            </books>
+          </configuration>
+        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
@@ -253,6 +313,10 @@
       <plugin>
         <groupId>com.sun.tools.xjc.maven2</groupId>
         <artifactId>maven-jaxb-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.doxia</groupId>
+        <artifactId>doxia-maven-plugin</artifactId>
       </plugin>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>

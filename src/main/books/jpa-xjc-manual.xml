@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<book xmlns="http://maven.apache.org/BOOK/1.0.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://maven.apache.org/BOOK/1.0.0 ../../../doxia/doxia-book/target/generated-site/xsd/book-1.0.0.xsd">
+  <id>jpa-xjc-manual</id>
+  <title>JPA-XJC Manual</title>
+  <chapters>
+    <chapter>
+      <id>index</id>
+      <title>Introduction</title>
+      <sections>
+        <section>
+          <id>index</id>
+        </section>
+      </sections>
+    </chapter>
+    <chapter>
+      <id>maven</id>
+      <title>Maven</title>
+      <sections>
+        <section>
+          <id>maven</id>
+        </section>
+      </sections>
+    </chapter>
+  </chapters>
+</book>
