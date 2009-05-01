@@ -25,13 +25,6 @@
   </formats>
   <files>
     <file>
-      <source>LICENSE-2.0.txt</source>
-      <outputDirectory>/</outputDirectory>
-      <fileMode>0644</fileMode>
-      <lineEnding>dos</lineEnding>
-      <filtered>false</filtered>
-    </file>
-    <file>
       <source>${project.build.directory}/maven-shared-archive-resources/META-INF/DEPENDENCIES</source>
       <outputDirectory>/lib</outputDirectory>
       <fileMode>0644</fileMode>
@@ -39,22 +32,8 @@
       <filtered>false</filtered>
     </file>
     <file>
-      <source>${project.build.directory}/generated-site/pdf/jpa-xjc-manual/jpa-xjc-manual.pdf</source>
-      <destName>JPA-XJC Manual ${pom.version}.pdf</destName>
-      <outputDirectory>/</outputDirectory>
-      <fileMode>0644</fileMode>
-      <filtered>false</filtered>
-    </file>
-    <file>
-      <source>${project.build.directory}/generated-site/rtf/jpa-xjc-manual/jpa-xjc-manual.rtf</source>
-      <destName>JPA-XJC Manual ${pom.version}.rtf</destName>
-      <outputDirectory>/</outputDirectory>
-      <fileMode>0644</fileMode>
-      <filtered>false</filtered>
-    </file>
-    <file>
       <source>${project.build.directory}/generated-site/xhtml/jpa-xjc-manual/jpa-xjc-manual.xhtml</source>
-      <destName>JPA-XJC Manual ${pom.version}.html</destName>
+      <destName>JPA-XJC ${pom.version}.html</destName>
       <outputDirectory>/</outputDirectory>
       <fileMode>0644</fileMode>
       <filtered>false</filtered>

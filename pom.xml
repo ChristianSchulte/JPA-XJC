@@ -287,12 +287,6 @@
                 <descriptor>src/main/books/jpa-xjc-manual.xml</descriptor>
                 <formats>
                   <format>
-                    <id>pdf</id>
-                  </format>
-                  <format>
-                    <id>rtf</id>
-                  </format>
-                  <format>
                     <id>xhtml</id>
                   </format>
                 </formats>
