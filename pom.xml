@@ -343,6 +343,7 @@
               </reports>
             </reportSet>
           </reportSets>
+          <xmlPath>src/main/changes/changes.xml</xmlPath>
         </configuration>
       </plugin>
     </plugins>
