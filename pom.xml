@@ -492,7 +492,6 @@
                 <configuration>
                   <tasks>
                     <sshexec host="shell.sourceforge.net" username="${jpaxjcplugin.ssh.username},jpaxjcplugin" password="${jpaxjcplugin.ssh.password}" command="create" timeout="300000" />
-
                   </tasks>
                 </configuration>
               </execution>
@@ -504,12 +503,7 @@
                 </goals>
                 <configuration>
                   <tasks>
-                    <sshexec host="shell.sourceforge.net"
-                             username="${jpaxjcplugin.ssh.username},jpaxjcplugin"
-                             password="${jpaxjcplugin.ssh.password}"
-                             command="create"
-                             timeout="300000"/>
-
+                    <sshexec host="shell.sourceforge.net" username="${jpaxjcplugin.ssh.username},jpaxjcplugin" password="${jpaxjcplugin.ssh.password}" command="create" timeout="300000"/>
                   </tasks>
                 </configuration>
               </execution>
@@ -522,7 +516,8 @@
                 <configuration>
                   <tasks>
                     <sshexec host="shell.sourceforge.net" username="${jpaxjcplugin.ssh.username},jpaxjcplugin" password="${jpaxjcplugin.ssh.password}" command="shutdown" timeout="300000" />
-
+                    <echo message="Sleeping for 1 minute waiting for shutdown of shell."/>
+                    <sleep minutes="1"/>
                   </tasks>
                 </configuration>
               </execution>
@@ -534,12 +529,9 @@
                 </goals>
                 <configuration>
                   <tasks>
-                    <sshexec host="shell.sourceforge.net"
-                             username="${jpaxjcplugin.ssh.username},jpaxjcplugin"
-                             password="${jpaxjcplugin.ssh.password}"
-                             command="shutdown"
-                             timeout="300000"/>
-
+                    <sshexec host="shell.sourceforge.net" username="${jpaxjcplugin.ssh.username},jpaxjcplugin" password="${jpaxjcplugin.ssh.password}" command="shutdown" timeout="300000"/>
+                    <echo message="Sleeping for 1 minute waiting for shutdown of shell."/>
+                    <sleep minutes="1"/>
                   </tasks>
                 </configuration>
               </execution>
