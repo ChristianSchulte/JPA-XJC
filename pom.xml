@@ -1,19 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-       Copyright 2009 Christian Schulte <cs@schulte.it>
+  Copyright (c) 2009 The JPA-XJC Project. All rights reserved.
 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions
+  are met:
 
-     http://www.apache.org/licenses/LICENSE-2.0
+    * Redistributions of source code must retain the above copyright
+      notice, this  list of conditions and the following disclaimer.
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in
+      the documentation and/or other materials provided with the
+      distribution.
+
+  THIS SOFTWARE IS PROVIDED BY THE JPA-XJC PROJECT AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+  THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+  PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE JPA-XJC PROJECT OR
+  CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+  $Id$
 
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
@@ -27,7 +41,7 @@
   JAXB 2.1 Schema to Java compiler plugin for annotating schema derived classes
   with Java persistence annotations.]]>
   </description>
-  <url>http://jpaxjcplugin.sourceforge.net/${pom.version}</url>
+  <url>http://jpaxjcplugin.sourceforge.net</url>
   <inceptionYear>2009</inceptionYear>
   <organization>
     <name>The JPA-XJC Community</name>
@@ -35,8 +49,8 @@
   </organization>
   <licenses>
     <license>
-      <name>Apache License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <name>The JPA-XJC Project Copyright</name>
+      <url>http://jpaxjcplugin.sourceforge.net/LICENSE.txt</url>
       <distribution>repo</distribution>
     </license>
   </licenses>
@@ -75,6 +89,13 @@
     <resources>
       <resource>
         <directory>src/main/resources</directory>
+      </resource>
+      <resource>
+        <directory>${basedir}</directory>
+        <targetPath>META-INF</targetPath>
+        <includes>
+          <include>LICENSE.txt</include>
+        </includes>
       </resource>
     </resources>
     <pluginManagement>
@@ -190,6 +211,11 @@
               <artifactId>jaxb-xjc</artifactId>
               <version>${jaxbImplVersion}</version>
             </dependency>
+            <dependency>
+              <groupId>net.sourceforge.ccxjc</groupId>
+              <artifactId>cc-xjc-plugin</artifactId>
+              <version>1.0-beta-2</version>
+            </dependency>
           </dependencies>
           <executions>
             <execution>
@@ -200,7 +226,7 @@
               </goals>
               <configuration>
                 <schemaDirectory>src/main/jaxb</schemaDirectory>
-                <args>-no-header -mark-generated -episode "${project.build.outputDirectory}/META-INF/sun-jaxb.episode"</args>
+                <args>-no-header -copy-constructor -mark-generated -episode "${project.build.outputDirectory}/META-INF/sun-jaxb.episode"</args>
               </configuration>
             </execution>
           </executions>
@@ -222,23 +248,6 @@
               </configuration>
             </execution>
           </executions>
-        </plugin>
-        <plugin>
-          <artifactId>maven-remote-resources-plugin</artifactId>
-          <version>1.0</version>
-          <executions>
-            <execution>
-              <id>process</id>
-              <goals>
-                <goal>process</goal>
-              </goals>
-            </execution>
-          </executions>
-          <configuration>
-            <resourceBundles>
-              <resourceBundle>org.apache:apache-jar-resource-bundle:1.4</resourceBundle>
-            </resourceBundles>
-          </configuration>
         </plugin>
         <plugin>
           <artifactId>maven-source-plugin</artifactId>
@@ -297,9 +306,6 @@
       </plugins>
     </pluginManagement>
     <plugins>
-      <plugin>
-        <artifactId>maven-remote-resources-plugin</artifactId>
-      </plugin>
       <plugin>
         <artifactId>buildnumber-maven-plugin</artifactId>
         <groupId>org.codehaus.mojo</groupId>
@@ -396,6 +402,16 @@
         <enabled>false</enabled>
       </snapshots>
     </repository>
+    <repository>
+      <id>ccxjc.sourceforge.net</id>
+      <url>http://ccxjc.sourceforge.net/maven2/releases</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
   </repositories>
   <pluginRepositories>
     <pluginRepository>
@@ -419,6 +435,16 @@
         <enabled>false</enabled>
       </snapshots>
     </pluginRepository>
+    <pluginRepository>
+      <id>ccxjc.sourceforge.net</id>
+      <url>http://ccxjc.sourceforge.net/maven2/releases</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </pluginRepository>
   </pluginRepositories>
   <distributionManagement>
     <repository>
@@ -433,12 +459,12 @@
     </snapshotRepository>
     <site>
       <id>jpaxjcplugin-site</id>
-      <url>scp://shell.sourceforge.net/home/groups/j/jp/jpaxjcplugin/htdocs/${pom.version}</url>
+      <url>scp://shell.sourceforge.net/home/groups/j/jp/jpaxjcplugin/htdocs</url>
     </site>
   </distributionManagement>
   <profiles>
     <profile>
-      <id>create-sourceforge-shell</id>
+      <id>sourceforge-shell</id>
       <activation>
         <activeByDefault>false</activeByDefault>
       </activation>
@@ -468,6 +494,23 @@
                              username="${jpaxjcplugin.ssh.username},jpaxjcplugin"
                              password="${jpaxjcplugin.ssh.password}"
                              command="create"
+                             timeout="300000"/>
+
+                  </tasks>
+                </configuration>
+              </execution>
+              <execution>
+                <id>shutdown-sourceforge-shell</id>
+                <phase>deploy</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <tasks>
+                    <sshexec host="shell.sourceforge.net"
+                             username="${jpaxjcplugin.ssh.username},jpaxjcplugin"
+                             password="${jpaxjcplugin.ssh.password}"
+                             command="shutdown"
                              timeout="300000"/>
 
                   </tasks>

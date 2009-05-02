@@ -1,0 +1,15 @@
+
+JPA-XJC ${pom.version} - 3RD-PARTY.txt - ${buildNumber}
+$Id:$
+
+  javax.annotation:jsr250-api:jar:1.0
+    JSR-250 Common Annotations for the JavaTM Platform
+    http://jcp.org/aboutJava/communityprocess/final/jsr250/index.html
+    License: Common Development and Distribution License (CDDL) v1.0
+             http://www.sun.com/cddl/cddl.html
+
+  javax.persistence:persistence-api:jar:1.0
+    Enterprise JavaBeans (EJB) 3.0
+    http://www.jcp.org/en/jsr/detail?id=220
+    License: Common Development and Distribution License (CDDL) v1.0
+             http://www.sun.com/cddl/cddl.html
