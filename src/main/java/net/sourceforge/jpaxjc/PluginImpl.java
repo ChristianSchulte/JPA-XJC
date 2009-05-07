@@ -26,7 +26,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * $Id$
- * 
+ *
  */
 package net.sourceforge.jpaxjc;
 
@@ -121,6 +121,7 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
@@ -128,7 +129,9 @@ import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.logging.Level;
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBContext;
@@ -171,11 +174,17 @@ public final class PluginImpl extends Plugin
     /** {@code http://java.sun.com/xml/ns/persistence/orm} schema location. */
     private static final String ORM_SCHEMA_LOCATION = "http://java.sun.com/xml/ns/persistence/orm_1_0.xsd";
 
+    /** Prefix added to messages logged to the console. */
+    private static final String MESSAGE_PREFIX = "JPA-XJC";
+
     /** The persistence unit name of the generated unit. */
     private String persistenceUnitName;
 
     /** The persistence unit root of the generated unit. */
     private File persistenceUnitRoot;
+
+    /** Options passed to the plugin. */
+    private Options options;
 
     /** Set of mapped classes. */
     private final Set<String> mappedClasses = new HashSet<String>();
@@ -235,6 +244,9 @@ public final class PluginImpl extends Plugin
         throws SAXException
     {
         boolean success = true;
+        this.options = options;
+
+        this.log( Level.INFO, "title", null );
 
         try
         {
@@ -335,12 +347,24 @@ public final class PluginImpl extends Plugin
                                                                 ' ' + ORM_NS + ' ' + ORM_SCHEMA_LOCATION );
 
                 final File ormFile = new File( metaInf, this.persistenceUnitName + ".xml" );
+                this.log( Level.INFO, "writing", new Object[]
+                    {
+                        ormFile.getAbsolutePath()
+                    } );
+
                 m.marshal( orm, ormFile );
                 u.getMappingFile().add( "META-INF/" + this.persistenceUnitName + ".xml" );
             }
 
             m.setProperty( Marshaller.JAXB_SCHEMA_LOCATION, PERSISTENCE_NS + ' ' + PERSISTENCE_SCHEMA_LOCATION );
-            m.marshal( p, new File( metaInf, "persistence.xml" ) );
+
+            final File persistenceFile = new File( metaInf, "persistence.xml" );
+            this.log( Level.INFO, "writing", new Object[]
+                {
+                    persistenceFile.getAbsolutePath()
+                } );
+
+            m.marshal( p, persistenceFile );
         }
         catch ( JAXBException e )
         {
@@ -411,7 +435,7 @@ public final class PluginImpl extends Plugin
                 entity = JAXB.unmarshal( new DOMSource( pc.element ), Entity.class );
 
                 orm.getEntity().add( entity );
-                this.toEntity( outline, c, orm, entity );
+                this.toEntity( outline, c, entity );
 
                 mapped = true;
 
@@ -428,16 +452,15 @@ public final class PluginImpl extends Plugin
                 String name = c.implClass.binaryName();
                 entity.setClazz( name );
 
-                final int idx = name.lastIndexOf( '.' );
-                if ( idx != -1 )
+                final String pkgName = c.implClass.getPackage().name();
+                if ( pkgName != null && pkgName.length() > 0 )
                 {
-                    name = name.substring( idx + 1 );
+                    name = name.substring( pkgName.length() + 1 );
                 }
 
                 entity.setName( name );
-
                 orm.getEntity().add( entity );
-                this.toEntity( outline, c, orm, entity );
+                this.toEntity( outline, c, entity );
                 mapped = true;
             }
 
@@ -445,7 +468,7 @@ public final class PluginImpl extends Plugin
         }
     }
 
-    private void toEntity( final Outline outline, final ClassOutline c, final EntityMappings orm, final Entity entity )
+    private void toEntity( final Outline outline, final ClassOutline c, final Entity entity )
         throws JAXBException
     {
         if ( entity.getClazz() == null )
@@ -455,10 +478,11 @@ public final class PluginImpl extends Plugin
         if ( entity.getName() == null )
         {
             String name = c.implClass.binaryName();
-            final int idx = name.lastIndexOf( '.' );
-            if ( idx != -1 )
+            String pkgName = c.implClass.getPackage().name();
+
+            if ( pkgName != null && pkgName.length() > 0 )
             {
-                name = name.substring( idx + 1 );
+                name = name.substring( pkgName.length() + 1 );
             }
 
             entity.setName( name );
@@ -936,9 +960,10 @@ public final class PluginImpl extends Plugin
         }
         else
         {
-            System.err.println( "[WARNING] Could not map property '" + f.getPropertyInfo().getName( true ) +
-                                "' of class '" + f.parent().implClass.binaryName() + "'.\n" +
-                                "          Consider using a customization. Annotating @javax.persistence.Transient." );
+            this.log( Level.WARNING, "cannotMapProperty", new Object[]
+                {
+                    f.getPropertyInfo().getName( true ), f.parent().implClass.binaryName()
+                } );
 
         }
 
@@ -958,9 +983,10 @@ public final class PluginImpl extends Plugin
         }
         else
         {
-            System.err.println( "[WARNING] Could not map property '" + f.getPropertyInfo().getName( true ) +
-                                "' of class '" + f.parent().implClass.binaryName() + "'.\n" +
-                                "          Consider using a customization. Annotating @javax.persistence.Transient." );
+            this.log( Level.WARNING, "cannotMapProperty", new Object[]
+                {
+                    f.getPropertyInfo().getName( true ), f.parent().implClass.binaryName()
+                } );
 
         }
 
@@ -2927,6 +2953,36 @@ public final class PluginImpl extends Plugin
         }
 
         return this.getSchemaSimpleType( type.getSimpleBaseType(), name );
+    }
+
+    private String getMessage( final String key, final Object args )
+    {
+        final ResourceBundle bundle = ResourceBundle.getBundle( "net/sourceforge/jpaxjc/PluginImpl" );
+        return new MessageFormat( bundle.getString( key ) ).format( args );
+    }
+
+    private void log( final Level level, final String key, final Object args )
+    {
+        final StringBuffer b = new StringBuffer().append( "[" ).append( MESSAGE_PREFIX ).append( "] [" ).
+            append( level ).append( "] " ).append( this.getMessage( key, args ) );
+
+        if ( this.options != null && !this.options.quiet )
+        {
+            final int l =
+                this.options != null && this.options.debugMode ? Level.ALL.intValue() : Level.INFO.intValue();
+
+            if ( level.intValue() >= l )
+            {
+                if ( level.intValue() <= Level.INFO.intValue() )
+                {
+                    System.out.println( b.toString() );
+                }
+                else
+                {
+                    System.err.println( b.toString() );
+                }
+            }
+        }
     }
 
 }

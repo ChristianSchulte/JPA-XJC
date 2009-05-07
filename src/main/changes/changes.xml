@@ -39,15 +39,20 @@
   </properties>
   <body>
     <!-- ******************************************************************* -->
-    <release version="1.0-beta-1" date="2009-04-24"
-             description="First release."/>
+    <release version="1.0-beta-1" date="2009-04-24"/>
 
     <!-- ******************************************************************* -->
-    <release version="1.0-beta-2" date="2009-05-03"
-             description="Maitenance release.">
-
+    <release version="1.0-beta-2" date="2009-05-03">
       <action dev="schulte2005" type="update">
         Updated to BSD-style licensing.
+      </action>
+    </release>
+
+    <!-- ******************************************************************* -->
+    <release version="1.0-beta-3" date="2009-05-07">
+      <action dev="schulte2005" type="update">
+        Updated to correctly remove package names from fully qualified class
+        names when building entity names.
       </action>
     </release>
   </body>
