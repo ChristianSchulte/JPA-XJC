@@ -46,8 +46,8 @@
       <filtered>true</filtered>
     </file>
     <file>
-      <source>${project.build.directory}/generated-site/xhtml/jpa-xjc-manual/jpa-xjc-manual.xhtml</source>
-      <destName>JPA-XJC ${pom.version}.html</destName>
+      <source>${project.build.directory}/generated-site/xhtml/jpa-xjc/jpa-xjc.xhtml</source>
+      <destName>README.html</destName>
       <outputDirectory>/</outputDirectory>
       <fileMode>0644</fileMode>
       <filtered>false</filtered>

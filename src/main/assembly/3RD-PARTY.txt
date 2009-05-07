@@ -1,6 +1,6 @@
 
 JPA-XJC ${pom.version} - 3RD-PARTY.txt - ${buildNumber}
-$Id:$
+$Id$
 
   javax.annotation:jsr250-api:jar:1.0
     JSR-250 Common Annotations for the JavaTM Platform

@@ -1,5 +1,5 @@
   -----
-JPA-XJC
+Examples
   -----
 Christian Schulte
   -----
@@ -36,34 +36,73 @@ March 2009
 ~~ $Id$
 ~~
 
-Maven Information
+Examples
+
+* Customizations
+
+  Customizations are needed whenever the default behavior of the plugin does not
+  meet the persistence requirements. Customization is done by supplying one
+  or more binding files (*.xjb) with elements from the
+  <<<http://java.sun.com/xml/ns/persistence>>> and
+  <<<http://java.sun.com/xml/ns/persistence/orm>>> namespaces. Instead of
+  providing complete mapping files, only the elements for which no default could
+  be determined need to be provided.
+
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<jaxb:bindings xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+               xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+               xmlns:xs="http://www.w3.org/2001/XMLSchema"
+               xmlns:persistence="http://java.sun.com/xml/ns/persistence"
+               xmlns:orm="http://java.sun.com/xml/ns/persistence/orm"
+               jaxb:version="2.0">
+
+  <jaxb:bindings schemaLocation="po.xsd">
+    <jaxb:bindings>
+      <!-- Adds a jta-data-source element to the generated persistence.xml file. -->
+      <persistence:jta-data-source>jta/po-model</persistence:jta-data-source>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="xs:complexType[@name='PurchaseOrderType']">
+      <!-- Adds a named query to the PurchaseOrderType entity. -->
+      <orm:named-query name="find-whatever">
+        <orm:query><![CDATA[SELECT p FROM PurchaseOrderType p WHERE whatever]]></orm:query>
+      </orm:named-query>
+    </jaxb:bindings>
+
+    <jaxb:bindings node="xs:complexType[@name='PurchaseOrderType']/xs:sequence/xs:element[@ref='comment']">
+      <!-- Changes the plugins' defaults of the comment property. -->
+      <orm:basic>
+        <orm:column length="4096" nullable="true"/>
+      </orm:basic>
+    </jaxb:bindings>
+  </jaxb:bindings>
+</jaxb:bindings>
+---
+
+* Maven
 
   Maven users simply add the JPA-XJC plugin as a dependency to a JAXB plugin of
   choice. For this to work, the JPA-XJC repository needs to be put in a POM or
-  the Maven settings.xml.
+  the Maven settings.
 
 ---
-
-  <repository>
-    <id>jpaxjcplugin.sourceforge.net</id>
-    <url>http://jpaxjcplugin.sourceforge.net/maven2/releases</url>
-    <releases>
-      <enabled>true</enabled>
-    </releases>
-    <snapshots>
-      <enabled>false</enabled>
-    </snapshots>
-  </repository>
-
+<repository>
+  <id>jpaxjcplugin-releases</id>
+  <url>http://jpaxjcplugin.sourceforge.net/maven2/releases</url>
+  <releases>
+    <enabled>true</enabled>
+  </releases>
+  <snapshots>
+    <enabled>false</enabled>
+  </snapshots>
+</repository>
 ---
-
-Example
 
   The following example demonstrates the use of the JPA-XJC Plugin with the
   Java.net maven-jaxb-plugin.
 
 ---
-
 <plugin>
   <groupId>com.sun.tools.xjc.maven2</groupId>
   <artifactId>maven-jaxb-plugin</artifactId>
@@ -87,7 +126,7 @@ Example
     <dependency>
       <groupId>net.sourceforge.jpaxjc</groupId>
       <artifactId>jpa-xjc-plugin</artifactId>
-      <version>1.0-beta-2</version>
+      <version>1.0-beta-3</version>
     </dependency>
   </dependencies>
   <executions>
@@ -105,14 +144,12 @@ Example
     </execution>
   </executions>
 </plugin>
-
 ---
 
-  <<<Note:>>> To use the Java.net maven-jaxb-plugin, the Java.net repositories
-  need to be used in addition to the JPA-XJC repository.
+  Note: To use the Java.net maven-jaxb-plugin, the Java.net repositories need to
+  be used in addition to the JPA-XJC repository.
 
 ---
-
 <repositories>
   <repository>
     <id>maven1-repository.dev.java.net</id>
@@ -160,5 +197,4 @@ Example
     </snapshots>
   </pluginRepository>
 </pluginRepositories>
-
 ---
