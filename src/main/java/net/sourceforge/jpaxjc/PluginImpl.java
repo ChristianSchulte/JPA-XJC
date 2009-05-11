@@ -220,7 +220,7 @@ public final class PluginImpl extends Plugin
     @Override
     public String getUsage()
     {
-        return "-jpa <unit-name> <unit-root>\t:\tenable JPA customizations";
+         return this.getMessage( "usage", null );
     }
 
     @Override
