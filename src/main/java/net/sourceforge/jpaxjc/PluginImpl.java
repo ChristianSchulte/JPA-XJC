@@ -567,6 +567,11 @@ public final class PluginImpl extends Plugin
             attributes.getId().add( id );
             mapped = true;
 
+            final Column defaultColumn =
+                this.applySchemaDefaults( f.getPropertyInfo().getSchemaComponent(), id.getColumn() );
+
+            id.setColumn( defaultColumn );
+
             if ( !pc.isAcknowledged() )
             {
                 pc.markAsAcknowledged();
@@ -590,6 +595,11 @@ public final class PluginImpl extends Plugin
             {
                 pc.markAsAcknowledged();
             }
+
+            final Column defaultColumn =
+                this.applySchemaDefaults( f.getPropertyInfo().getSchemaComponent(), basic.getColumn() );
+
+            basic.setColumn( defaultColumn );
         }
 
         if ( f.getPropertyInfo().getCustomizations().find( ORM_NS, "version" ) != null )
@@ -609,6 +619,11 @@ public final class PluginImpl extends Plugin
             {
                 pc.markAsAcknowledged();
             }
+
+            final Column defaultColumn =
+                this.applySchemaDefaults( f.getPropertyInfo().getSchemaComponent(), version.getColumn() );
+
+            version.setColumn( defaultColumn );
         }
 
         if ( f.getPropertyInfo().getCustomizations().find( ORM_NS, "many-to-one" ) != null )
@@ -1156,6 +1171,61 @@ public final class PluginImpl extends Plugin
         }
 
         return columnEmpty ? null : col;
+    }
+
+    private Column applySchemaDefaults( final XSComponent comp, final Column column )
+    {
+        final Column defaultColumn = this.toColumn( comp );
+        if ( defaultColumn != null )
+        {
+            if ( column == null )
+            {
+                return defaultColumn;
+            }
+
+            if ( column.isInsertable() == null )
+            {
+                column.setInsertable( defaultColumn.isInsertable() );
+            }
+            if ( column.isNullable() == null )
+            {
+                column.setNullable( defaultColumn.isNullable() );
+            }
+            if ( column.isUnique() == null )
+            {
+                column.setUnique( defaultColumn.isUnique() );
+            }
+            if ( column.isUpdatable() == null )
+            {
+                column.setUpdatable( defaultColumn.isUpdatable() );
+            }
+            if ( column.getColumnDefinition() == null )
+            {
+                column.setColumnDefinition( defaultColumn.getColumnDefinition() );
+            }
+            if ( column.getLength() == null )
+            {
+                column.setLength( defaultColumn.getLength() );
+            }
+            if ( column.getName() == null )
+            {
+                column.setName( defaultColumn.getName() );
+            }
+            if ( column.getPrecision() == null )
+            {
+                column.setPrecision( defaultColumn.getPrecision() );
+            }
+            if ( column.getScale() == null )
+            {
+                column.setScale( defaultColumn.getScale() );
+            }
+            if ( column.getTable() == null )
+            {
+                column.setTable( defaultColumn.getTable() );
+            }
+        }
+
+        return column;
     }
 
     // --

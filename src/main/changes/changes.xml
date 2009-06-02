@@ -58,6 +58,11 @@
 
     <!-- ******************************************************************* -->
     <release version="1.0-beta-4" date="2009-06-02">
+      <action dev="schulte2005" type="update">
+        Updated to apply schema derived defaults to &lt;orm:column&gt; elements
+        of &lt;orm:id&gt;, &lt;orm:basic&gt; and &lt;orm:version&gt;
+        customizations.
+      </action>
       <action dev="schulte2005" type="fix">
         Added support for &lt;orm:id&gt; customizations. Versions prior to this
         version do not support &lt;orm:id&gt; customizations.
