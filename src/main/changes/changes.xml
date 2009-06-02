@@ -50,22 +50,21 @@
 
     <!-- ******************************************************************* -->
     <release version="1.0-beta-3" date="2009-05-07">
-      <action dev="schulte2005" type="update">
+      <action dev="schulte2005" type="update"><![CDATA[
         Updated to correctly remove package names from fully qualified class
-        names when building entity names.
+        names when building entity names.]]>
       </action>
     </release>
 
     <!-- ******************************************************************* -->
     <release version="1.0-beta-4" date="2009-06-02">
-      <action dev="schulte2005" type="update">
-        Updated to apply schema derived defaults to &lt;orm:column&gt; elements
-        of &lt;orm:id&gt;, &lt;orm:basic&gt; and &lt;orm:version&gt;
-        customizations.
+      <action dev="schulte2005" type="update"><![CDATA[
+        Updated to apply schema derived defaults to <orm:column> elements
+        of <orm:id>, <orm:basic> and <orm:version> customizations.]]>
       </action>
-      <action dev="schulte2005" type="fix">
-        Added support for &lt;orm:id&gt; customizations. Versions prior to this
-        version do not support &lt;orm:id&gt; customizations.
+      <action dev="schulte2005" type="fix"><![CDATA[
+        Added support for <orm:id> customizations. Versions prior to this
+        version do not support <orm:id> customizations.]]>
       </action>
     </release>
   </body>
