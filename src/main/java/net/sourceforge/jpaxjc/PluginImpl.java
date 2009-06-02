@@ -220,7 +220,7 @@ public final class PluginImpl extends Plugin
     @Override
     public String getUsage()
     {
-         return this.getMessage( "usage", null );
+        return this.getMessage( "usage", null );
     }
 
     @Override
@@ -553,6 +553,25 @@ public final class PluginImpl extends Plugin
         throws JAXBException
     {
         boolean mapped = false;
+
+        if ( f.getPropertyInfo().getCustomizations().find( ORM_NS, "id" ) != null )
+        {
+            final CPluginCustomization pc = f.getPropertyInfo().getCustomizations().find( ORM_NS, "id" );
+            final Id id = JAXB.unmarshal( new DOMSource( pc.element ), Id.class );
+
+            if ( id.getName() == null )
+            {
+                id.setName( f.getPropertyInfo().getName( false ) );
+            }
+
+            attributes.getId().add( id );
+            mapped = true;
+
+            if ( !pc.isAcknowledged() )
+            {
+                pc.markAsAcknowledged();
+            }
+        }
 
         if ( f.getPropertyInfo().getCustomizations().find( ORM_NS, "basic" ) != null )
         {

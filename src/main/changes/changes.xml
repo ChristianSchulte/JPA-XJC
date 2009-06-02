@@ -55,5 +55,13 @@
         names when building entity names.
       </action>
     </release>
+
+    <!-- ******************************************************************* -->
+    <release version="1.0-beta-4" date="2009-06-02">
+      <action dev="schulte2005" type="fix">
+        Added support for &lt;orm:id&gt; customizations. Versions prior to this
+        version do not support &lt;orm:id&gt; customizations.
+      </action>
+    </release>
   </body>
 </document>
