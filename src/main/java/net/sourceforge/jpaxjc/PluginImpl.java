@@ -3053,23 +3053,30 @@ public final class PluginImpl extends Plugin
     private void log( final Level level, final String key, final Object args )
     {
         final StringBuffer b = new StringBuffer().append( "[" ).append( MESSAGE_PREFIX ).append( "] [" ).
-            append( level ).append( "] " ).append( this.getMessage( key, args ) );
+            append( level.getLocalizedName() ).append( "] " ).append( this.getMessage( key, args ) );
 
+        int logLevel = Level.WARNING.intValue();
         if ( this.options != null && !this.options.quiet )
         {
-            final int l =
-                this.options != null && this.options.debugMode ? Level.ALL.intValue() : Level.INFO.intValue();
-
-            if ( level.intValue() >= l )
+            if ( this.options.verbose )
             {
-                if ( level.intValue() <= Level.INFO.intValue() )
-                {
-                    System.out.println( b.toString() );
-                }
-                else
-                {
-                    System.err.println( b.toString() );
-                }
+                logLevel = Level.INFO.intValue();
+            }
+            if ( this.options.debugMode )
+            {
+                logLevel = Level.ALL.intValue();
+            }
+        }
+
+        if ( level.intValue() >= logLevel )
+        {
+            if ( level.intValue() <= Level.INFO.intValue() )
+            {
+                System.out.println( b.toString() );
+            }
+            else
+            {
+                System.err.println( b.toString() );
             }
         }
     }

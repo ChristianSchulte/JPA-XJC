@@ -79,6 +79,13 @@
       <post>jpaxjcplugin-svn@lists.sourceforge.net</post>
       <archive>http://sourceforge.net/mailarchive/forum.php?forum=jpaxjcplugin-svn</archive>
     </mailingList>
+    <mailingList>
+      <name>jpaxjcplugin-notifications</name>
+      <subscribe>http://lists.sourceforge.net/lists/listinfo/jpaxjcplugin-notifications</subscribe>
+      <unsubscribe>http://lists.sourceforge.net/lists/listinfo/jpaxjcplugin-notifications</unsubscribe>
+      <post>jpaxjcplugin-notifications@lists.sourceforge.net</post>
+      <archive>http://sourceforge.net/mailarchive/forum.php?forum=jpaxjcplugin-notifications</archive>
+    </mailingList>
   </mailingLists>
   <scm>
     <connection>scm:svn:https://jpaxjcplugin.svn.sourceforge.net/svnroot/jpaxjcplugin/trunk</connection>
@@ -102,6 +109,7 @@
     <pluginManagement>
       <plugins>
         <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
           <version>2.0.2</version>
           <configuration>
@@ -115,8 +123,9 @@
           </configuration>
         </plugin>
         <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-site-plugin</artifactId>
-          <version>2.0</version>
+          <version>2.0.1</version>
           <configuration>
             <inputEncoding>UTF-8</inputEncoding>
             <outputEncoding>UTF-8</outputEncoding>
@@ -124,11 +133,9 @@
           </configuration>
         </plugin>
         <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>
-          <version>2.3</version>
-          <configuration>
-            <encoding>UTF-8</encoding>
-          </configuration>
+          <version>2.4.1</version>
         </plugin>
         <plugin>
           <artifactId>buildnumber-maven-plugin</artifactId>
@@ -152,6 +159,7 @@
           </executions>
         </plugin>
         <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-release-plugin</artifactId>
           <version>2.0-beta-9</version>
           <configuration>
@@ -161,6 +169,7 @@
           </configuration>
         </plugin>
         <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
           <version>2.2</version>
           <configuration>
@@ -176,6 +185,7 @@
           </configuration>
         </plugin>
         <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
           <version>2.4.3</version>
           <configuration>
@@ -184,58 +194,64 @@
           </configuration>
         </plugin>
         <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-clean-plugin</artifactId>
           <version>2.3</version>
         </plugin>
         <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-deploy-plugin</artifactId>
           <version>2.4</version>
         </plugin>
         <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-install-plugin</artifactId>
           <version>2.3</version>
         </plugin>
         <plugin>
-          <groupId>com.sun.tools.xjc.maven2</groupId>
-          <artifactId>maven-jaxb-plugin</artifactId>
-          <version>1.1</version>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>jaxb2-maven-plugin</artifactId>
+          <version>1.2</version>
           <dependencies>
             <dependency>
               <groupId>javax.xml.bind</groupId>
               <artifactId>jaxb-api</artifactId>
-              <version>${jaxbApiVersion}</version>
+              <version>2.1</version>
             </dependency>
             <dependency>
               <groupId>com.sun.xml.bind</groupId>
               <artifactId>jaxb-impl</artifactId>
-              <version>${jaxbImplVersion}</version>
+              <version>2.1.12</version>
             </dependency>
             <dependency>
               <groupId>com.sun.xml.bind</groupId>
               <artifactId>jaxb-xjc</artifactId>
-              <version>${jaxbImplVersion}</version>
+              <version>2.1.12</version>
             </dependency>
             <dependency>
               <groupId>net.sourceforge.ccxjc</groupId>
               <artifactId>cc-xjc-plugin</artifactId>
-              <version>1.0-beta-5</version>
+              <version>1.1</version>
             </dependency>
           </dependencies>
           <executions>
             <execution>
-              <id>generate</id>
-              <phase>process-resources</phase>
+              <id>xjc</id>
+              <phase>generate-sources</phase>
               <goals>
-                <goal>generate</goal>
+                <goal>xjc</goal>
               </goals>
               <configuration>
+                <arguments>-copy-constructor -cc-visibility private -cc-target 1.5 -mark-generated</arguments>
+                <bindingDirectory>src/main/jaxb</bindingDirectory>
                 <schemaDirectory>src/main/jaxb</schemaDirectory>
-                <args>-no-header -copy-constructor -mark-generated -episode "${project.build.outputDirectory}/META-INF/sun-jaxb.episode"</args>
+                <extension>true</extension>
               </configuration>
             </execution>
           </executions>
         </plugin>
         <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-assembly-plugin</artifactId>
           <version>2.2-beta-4</version>
           <executions>
@@ -254,8 +270,9 @@
           </executions>
         </plugin>
         <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-source-plugin</artifactId>
-          <version>2.1</version>
+          <version>2.1.1</version>
           <configuration>
             <archive>
               <index>true</index>
@@ -269,8 +286,9 @@
           </configuration>
         </plugin>
         <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>2.5</version>
+          <version>2.6</version>
           <configuration>
             <archive>
               <index>true</index>
@@ -310,13 +328,14 @@
           </configuration>
         </plugin>
         <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-antrun-plugin</artifactId>
           <version>1.3</version>
         </plugin>
         <plugin>
           <artifactId>build-helper-maven-plugin</artifactId>
           <groupId>org.codehaus.mojo</groupId>
-          <version>1.3</version>
+          <version>1.4</version>
           <executions>
             <execution>
               <goals>
@@ -337,14 +356,15 @@
         <groupId>org.codehaus.mojo</groupId>
       </plugin>
       <plugin>
-        <groupId>com.sun.tools.xjc.maven2</groupId>
-        <artifactId>maven-jaxb-plugin</artifactId>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jaxb2-maven-plugin</artifactId>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.doxia</groupId>
         <artifactId>doxia-maven-plugin</artifactId>
       </plugin>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-antrun-plugin</artifactId>
         <executions>
           <execution>
@@ -356,13 +376,13 @@
             <configuration>
               <tasks>
                 <copy file="${project.build.directory}/generated-site/xhtml/jpa-xjc/jpa-xjc.xhtml" tofile="${project.build.outputDirectory}/META-INF/README.html" />
-
               </tasks>
             </configuration>
           </execution>
         </executions>
       </plugin>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
       </plugin>
     </plugins>
@@ -370,10 +390,12 @@
   <reporting>
     <plugins>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-project-info-reports-plugin</artifactId>
-        <version>2.1.1</version>
+        <version>2.1.2</version>
       </plugin>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-changes-plugin</artifactId>
         <version>2.1</version>
         <configuration>
@@ -396,19 +418,19 @@
     <dependency>
       <groupId>javax.xml.bind</groupId>
       <artifactId>jaxb-api</artifactId>
-      <version>${jaxbApiVersion}</version>
+      <version>2.1</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.sun.xml.bind</groupId>
       <artifactId>jaxb-impl</artifactId>
-      <version>${jaxbImplVersion}</version>
+      <version>2.1.12</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.sun.xml.bind</groupId>
       <artifactId>jaxb-xjc</artifactId>
-      <version>${jaxbImplVersion}</version>
+      <version>2.1.12</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -425,72 +447,6 @@
       <optional>true</optional>
     </dependency>
   </dependencies>
-  <repositories>
-    <repository>
-      <id>maven1-repository.dev.java.net</id>
-      <url>http://download.java.net/maven/1</url>
-      <layout>legacy</layout>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-    <repository>
-      <id>maven2-repository.dev.java.net</id>
-      <url>http://download.java.net/maven/2</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-    <repository>
-      <id>ccxjc-releases</id>
-      <url>http://ccxjc.sourceforge.net/maven2/releases</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
-  <pluginRepositories>
-    <pluginRepository>
-      <id>maven1-repository.dev.java.net</id>
-      <url>http://download.java.net/maven/1</url>
-      <layout>legacy</layout>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </pluginRepository>
-    <pluginRepository>
-      <id>maven2-repository.dev.java.net</id>
-      <url>http://download.java.net/maven/2</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </pluginRepository>
-    <pluginRepository>
-      <id>ccxjc-releases</id>
-      <url>http://ccxjc.sourceforge.net/maven2/releases</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </pluginRepository>
-  </pluginRepositories>
   <distributionManagement>
     <repository>
       <id>jpaxjcplugin-releases</id>
@@ -507,85 +463,8 @@
       <url>scp://shell.sourceforge.net/home/groups/j/jp/jpaxjcplugin/htdocs</url>
     </site>
   </distributionManagement>
-  <profiles>
-    <profile>
-      <id>sourceforge-shell</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-antrun-plugin</artifactId>
-            <dependencies>
-              <dependency>
-                <groupId>org.apache.ant</groupId>
-                <artifactId>ant-jsch</artifactId>
-                <version>1.7.1</version>
-              </dependency>
-            </dependencies>
-            <executions>
-              <execution>
-                <id>create-sourceforge-shell</id>
-                <phase>validate</phase>
-                <goals>
-                  <goal>run</goal>
-                </goals>
-                <configuration>
-                  <tasks>
-                    <sshexec host="shell.sourceforge.net" username="${jpaxjcplugin.ssh.username},jpaxjcplugin" password="${jpaxjcplugin.ssh.password}" command="create" timeout="300000" />
-                  </tasks>
-                </configuration>
-              </execution>
-              <execution>
-                <id>create-sourceforge-shell-site</id>
-                <phase>pre-site</phase>
-                <goals>
-                  <goal>run</goal>
-                </goals>
-                <configuration>
-                  <tasks>
-                    <sshexec host="shell.sourceforge.net" username="${jpaxjcplugin.ssh.username},jpaxjcplugin" password="${jpaxjcplugin.ssh.password}" command="create" timeout="300000" />
-                  </tasks>
-                </configuration>
-              </execution>
-              <execution>
-                <id>shutdown-sourceforge-shell</id>
-                <phase>deploy</phase>
-                <goals>
-                  <goal>run</goal>
-                </goals>
-                <configuration>
-                  <tasks>
-                    <sshexec host="shell.sourceforge.net" username="${jpaxjcplugin.ssh.username},jpaxjcplugin" password="${jpaxjcplugin.ssh.password}" command="shutdown" timeout="300000" />
-                    <echo message="Sleeping for 1 minute waiting for shutdown of shell." />
-                    <sleep minutes="1" />
-                  </tasks>
-                </configuration>
-              </execution>
-              <execution>
-                <id>shutdown-sourceforge-shell-site</id>
-                <phase>site-deploy</phase>
-                <goals>
-                  <goal>run</goal>
-                </goals>
-                <configuration>
-                  <tasks>
-                    <sshexec host="shell.sourceforge.net" username="${jpaxjcplugin.ssh.username},jpaxjcplugin" password="${jpaxjcplugin.ssh.password}" command="shutdown" timeout="300000" />
-                    <echo message="Sleeping for 1 minute waiting for shutdown of shell." />
-                    <sleep minutes="1" />
-                  </tasks>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
   <properties>
-    <jaxbApiVersion>2.1</jaxbApiVersion>
-    <jaxbImplVersion>2.1.10</jaxbImplVersion>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
 </project>
