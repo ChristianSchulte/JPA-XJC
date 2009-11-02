@@ -220,7 +220,15 @@ public final class PluginImpl extends Plugin
     @Override
     public String getUsage()
     {
-        return this.getMessage( "usage", null );
+        final StringBuilder b = new StringBuilder();
+        b.append( "  " ).append( "-jpa               :  " ).
+            append( this.getMessage( "usage", null ) ).append( System.getProperty( "line.separator" ) );
+
+        b.append( "                     :  " ).append( this.getMessage( "usageUnitName", null ) ).
+            append( System.getProperty( "line.separator" ) );
+
+        b.append( "                     :  " ).append( this.getMessage( "usageUnitRoot", null ) );
+        return b.toString();
     }
 
     @Override
