@@ -83,6 +83,7 @@
       <item name="MantisBT" href="http://apps.sourceforge.net/mantisbt/jpaxjcplugin/"/>
       <item name="IdeaTorrent" href="http://apps.sourceforge.net/ideatorrent/jpaxjcplugin/"/>
       <item name="MediaWiki" href="https://apps.sourceforge.net/mediawiki/jpaxjcplugin/index.php?title=Main_Page"/>
+      <item name="Stats" href="http://sourceforge.net/project/stats/?group_id=256748&amp;ugn=jpaxjcplugin"/>
     </menu>
 
     <menu ref="reports" />
