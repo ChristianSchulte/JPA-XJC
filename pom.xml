@@ -36,7 +36,7 @@
   <artifactId>jpa-xjc-plugin</artifactId>
   <packaging>jar</packaging>
   <name>JPA-XJC</name>
-  <version>1.0-beta-6-SNAPSHOT</version>
+  <version>1.0-beta-5-SNAPSHOT</version>
   <description><![CDATA[
   JAXB 2.1 Schema to Java compiler plugin for annotating schema derived classes
   with Java persistence annotations.]]>
