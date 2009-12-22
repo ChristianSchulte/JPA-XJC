@@ -94,6 +94,7 @@ Examples
            stax-api-1.0.jar:\
            jaxb-impl-2.1.12.jar:\
            jaxb-xjc-2.1.12.jar:\
+           persistence-api-1.0.jar:\
            jpa-xjc-plugin-1.0-beta-5.jar\
            com.sun.tools.xjc.Driver -d /tmp/src -jpa "<name>" "<directory>" <schema files>
 ---
