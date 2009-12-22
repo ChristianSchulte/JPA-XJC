@@ -44,59 +44,59 @@ import com.sun.codemodel.JMod;
 import com.sun.codemodel.JTryBlock;
 import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
-import com.sun.java.xml.ns.persistence.Persistence;
-import com.sun.java.xml.ns.persistence.orm.AccessType;
-import com.sun.java.xml.ns.persistence.orm.AssociationOverride;
-import com.sun.java.xml.ns.persistence.orm.AttributeOverride;
-import com.sun.java.xml.ns.persistence.orm.Attributes;
-import com.sun.java.xml.ns.persistence.orm.Basic;
-import com.sun.java.xml.ns.persistence.orm.CascadeType;
-import com.sun.java.xml.ns.persistence.orm.Column;
-import com.sun.java.xml.ns.persistence.orm.ColumnResult;
-import com.sun.java.xml.ns.persistence.orm.DiscriminatorColumn;
-import com.sun.java.xml.ns.persistence.orm.Embeddable;
-import com.sun.java.xml.ns.persistence.orm.EmbeddableAttributes;
-import com.sun.java.xml.ns.persistence.orm.Embedded;
-import com.sun.java.xml.ns.persistence.orm.EmptyType;
-import com.sun.java.xml.ns.persistence.orm.Entity;
-import com.sun.java.xml.ns.persistence.orm.EntityListener;
-import com.sun.java.xml.ns.persistence.orm.EntityListeners;
-import com.sun.java.xml.ns.persistence.orm.EntityMappings;
-import com.sun.java.xml.ns.persistence.orm.EntityResult;
-import com.sun.java.xml.ns.persistence.orm.FieldResult;
-import com.sun.java.xml.ns.persistence.orm.GeneratedValue;
-import com.sun.java.xml.ns.persistence.orm.GenerationType;
-import com.sun.java.xml.ns.persistence.orm.Id;
-import com.sun.java.xml.ns.persistence.orm.IdClass;
-import com.sun.java.xml.ns.persistence.orm.Inheritance;
-import com.sun.java.xml.ns.persistence.orm.JoinColumn;
-import com.sun.java.xml.ns.persistence.orm.JoinTable;
-import com.sun.java.xml.ns.persistence.orm.ManyToMany;
-import com.sun.java.xml.ns.persistence.orm.ManyToOne;
-import com.sun.java.xml.ns.persistence.orm.MappedSuperclass;
-import com.sun.java.xml.ns.persistence.orm.NamedNativeQuery;
-import com.sun.java.xml.ns.persistence.orm.NamedQuery;
-import com.sun.java.xml.ns.persistence.orm.OneToMany;
-import com.sun.java.xml.ns.persistence.orm.OneToOne;
-import com.sun.java.xml.ns.persistence.orm.PersistenceUnitMetadata;
-import com.sun.java.xml.ns.persistence.orm.PostLoad;
-import com.sun.java.xml.ns.persistence.orm.PostPersist;
-import com.sun.java.xml.ns.persistence.orm.PostRemove;
-import com.sun.java.xml.ns.persistence.orm.PostUpdate;
-import com.sun.java.xml.ns.persistence.orm.PrePersist;
-import com.sun.java.xml.ns.persistence.orm.PreRemove;
-import com.sun.java.xml.ns.persistence.orm.PreUpdate;
-import com.sun.java.xml.ns.persistence.orm.PrimaryKeyJoinColumn;
-import com.sun.java.xml.ns.persistence.orm.QueryHint;
-import com.sun.java.xml.ns.persistence.orm.SecondaryTable;
-import com.sun.java.xml.ns.persistence.orm.SequenceGenerator;
-import com.sun.java.xml.ns.persistence.orm.SqlResultSetMapping;
-import com.sun.java.xml.ns.persistence.orm.Table;
-import com.sun.java.xml.ns.persistence.orm.TableGenerator;
-import com.sun.java.xml.ns.persistence.orm.TemporalType;
-import com.sun.java.xml.ns.persistence.orm.Transient;
-import com.sun.java.xml.ns.persistence.orm.UniqueConstraint;
-import com.sun.java.xml.ns.persistence.orm.Version;
+import net.sourceforge.jpaxjc.ns.persistence.Persistence;
+import net.sourceforge.jpaxjc.ns.persistence.orm.AccessType;
+import net.sourceforge.jpaxjc.ns.persistence.orm.AssociationOverride;
+import net.sourceforge.jpaxjc.ns.persistence.orm.AttributeOverride;
+import net.sourceforge.jpaxjc.ns.persistence.orm.Attributes;
+import net.sourceforge.jpaxjc.ns.persistence.orm.Basic;
+import net.sourceforge.jpaxjc.ns.persistence.orm.CascadeType;
+import net.sourceforge.jpaxjc.ns.persistence.orm.Column;
+import net.sourceforge.jpaxjc.ns.persistence.orm.ColumnResult;
+import net.sourceforge.jpaxjc.ns.persistence.orm.DiscriminatorColumn;
+import net.sourceforge.jpaxjc.ns.persistence.orm.Embeddable;
+import net.sourceforge.jpaxjc.ns.persistence.orm.EmbeddableAttributes;
+import net.sourceforge.jpaxjc.ns.persistence.orm.Embedded;
+import net.sourceforge.jpaxjc.ns.persistence.orm.EmptyType;
+import net.sourceforge.jpaxjc.ns.persistence.orm.Entity;
+import net.sourceforge.jpaxjc.ns.persistence.orm.EntityListener;
+import net.sourceforge.jpaxjc.ns.persistence.orm.EntityListeners;
+import net.sourceforge.jpaxjc.ns.persistence.orm.EntityMappings;
+import net.sourceforge.jpaxjc.ns.persistence.orm.EntityResult;
+import net.sourceforge.jpaxjc.ns.persistence.orm.FieldResult;
+import net.sourceforge.jpaxjc.ns.persistence.orm.GeneratedValue;
+import net.sourceforge.jpaxjc.ns.persistence.orm.GenerationType;
+import net.sourceforge.jpaxjc.ns.persistence.orm.Id;
+import net.sourceforge.jpaxjc.ns.persistence.orm.IdClass;
+import net.sourceforge.jpaxjc.ns.persistence.orm.Inheritance;
+import net.sourceforge.jpaxjc.ns.persistence.orm.JoinColumn;
+import net.sourceforge.jpaxjc.ns.persistence.orm.JoinTable;
+import net.sourceforge.jpaxjc.ns.persistence.orm.ManyToMany;
+import net.sourceforge.jpaxjc.ns.persistence.orm.ManyToOne;
+import net.sourceforge.jpaxjc.ns.persistence.orm.MappedSuperclass;
+import net.sourceforge.jpaxjc.ns.persistence.orm.NamedNativeQuery;
+import net.sourceforge.jpaxjc.ns.persistence.orm.NamedQuery;
+import net.sourceforge.jpaxjc.ns.persistence.orm.OneToMany;
+import net.sourceforge.jpaxjc.ns.persistence.orm.OneToOne;
+import net.sourceforge.jpaxjc.ns.persistence.orm.PersistenceUnitMetadata;
+import net.sourceforge.jpaxjc.ns.persistence.orm.PostLoad;
+import net.sourceforge.jpaxjc.ns.persistence.orm.PostPersist;
+import net.sourceforge.jpaxjc.ns.persistence.orm.PostRemove;
+import net.sourceforge.jpaxjc.ns.persistence.orm.PostUpdate;
+import net.sourceforge.jpaxjc.ns.persistence.orm.PrePersist;
+import net.sourceforge.jpaxjc.ns.persistence.orm.PreRemove;
+import net.sourceforge.jpaxjc.ns.persistence.orm.PreUpdate;
+import net.sourceforge.jpaxjc.ns.persistence.orm.PrimaryKeyJoinColumn;
+import net.sourceforge.jpaxjc.ns.persistence.orm.QueryHint;
+import net.sourceforge.jpaxjc.ns.persistence.orm.SecondaryTable;
+import net.sourceforge.jpaxjc.ns.persistence.orm.SequenceGenerator;
+import net.sourceforge.jpaxjc.ns.persistence.orm.SqlResultSetMapping;
+import net.sourceforge.jpaxjc.ns.persistence.orm.Table;
+import net.sourceforge.jpaxjc.ns.persistence.orm.TableGenerator;
+import net.sourceforge.jpaxjc.ns.persistence.orm.TemporalType;
+import net.sourceforge.jpaxjc.ns.persistence.orm.Transient;
+import net.sourceforge.jpaxjc.ns.persistence.orm.UniqueConstraint;
+import net.sourceforge.jpaxjc.ns.persistence.orm.Version;
 import com.sun.tools.xjc.BadCommandLineException;
 import com.sun.tools.xjc.Options;
 import com.sun.tools.xjc.Plugin;
@@ -141,6 +141,8 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -168,11 +170,19 @@ public final class PluginImpl extends Plugin
     private static final String PERSISTENCE_SCHEMA_LOCATION =
         "http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd";
 
+    /** {@code http://java.sun.com/xml/ns/persistence} classpath location. */
+    private static final String PERSISTENCE_SCHEMA_CLASSPATH_LOCATION =
+        "/net/sourceforge/jpaxjc/ns/persistence/persistence_1_0.xsd";
+
     /** {@code http://java.sun.com/xml/ns/persistence/orm} namespace URI. */
     private static final String ORM_NS = "http://java.sun.com/xml/ns/persistence/orm";
 
     /** {@code http://java.sun.com/xml/ns/persistence/orm} schema location. */
     private static final String ORM_SCHEMA_LOCATION = "http://java.sun.com/xml/ns/persistence/orm_1_0.xsd";
+
+    /** {@code http://java.sun.com/xml/ns/persistence/orm} classpath location. */
+    private static final String ORM_SCHEMA_CLASSPATH_LOCATION =
+        "/net/sourceforge/jpaxjc/ns/persistence/orm/orm_1_0.xsd";
 
     /** Prefix added to messages logged to the console. */
     private static final String MESSAGE_PREFIX = "JPA-XJC";
@@ -333,11 +343,25 @@ public final class PluginImpl extends Plugin
                 it.remove();
             }
 
-            final JAXBContext ctx = JAXBContext.newInstance(
-                "com.sun.java.xml.ns.persistence:com.sun.java.xml.ns.persistence.orm" );
+            final SchemaFactory schemaFactory = SchemaFactory.newInstance( XMLConstants.W3C_XML_SCHEMA_NS_URI );
+            final Schema persistenceSchema =
+                schemaFactory.newSchema( this.getClass().getResource( PERSISTENCE_SCHEMA_CLASSPATH_LOCATION ) );
 
-            final Marshaller m = ctx.createMarshaller();
-            m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+            final Schema ormSchema =
+                schemaFactory.newSchema( this.getClass().getResource( ORM_SCHEMA_CLASSPATH_LOCATION ) );
+
+            final JAXBContext persistenceCtx = JAXBContext.newInstance( "net.sourceforge.jpaxjc.ns.persistence" );
+            final JAXBContext ormCtx = JAXBContext.newInstance( "net.sourceforge.jpaxjc.ns.persistence.orm" );
+            final Marshaller persistenceMarshaller = persistenceCtx.createMarshaller();
+            final Marshaller ormMarshaller = ormCtx.createMarshaller();
+            persistenceMarshaller.setSchema( persistenceSchema );
+            persistenceMarshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+            persistenceMarshaller.setProperty( Marshaller.JAXB_SCHEMA_LOCATION,
+                                               PERSISTENCE_NS + ' ' + PERSISTENCE_SCHEMA_LOCATION );
+
+            ormMarshaller.setSchema( ormSchema );
+            ormMarshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
+            ormMarshaller.setProperty( Marshaller.JAXB_SCHEMA_LOCATION, ORM_NS + ' ' + ORM_SCHEMA_LOCATION );
 
             final File metaInf = new File( this.persistenceUnitRoot, "META-INF" );
             if ( !metaInf.exists() )
@@ -351,20 +375,15 @@ public final class PluginImpl extends Plugin
                  !orm.getSequenceGenerator().isEmpty() || !orm.getSqlResultSetMapping().isEmpty() ||
                  !orm.getTableGenerator().isEmpty() )
             {
-                m.setProperty( Marshaller.JAXB_SCHEMA_LOCATION, PERSISTENCE_NS + ' ' + PERSISTENCE_SCHEMA_LOCATION +
-                                                                ' ' + ORM_NS + ' ' + ORM_SCHEMA_LOCATION );
-
                 final File ormFile = new File( metaInf, this.persistenceUnitName + ".xml" );
                 this.log( Level.INFO, "writing", new Object[]
                     {
                         ormFile.getAbsolutePath()
                     } );
 
-                m.marshal( orm, ormFile );
+                ormMarshaller.marshal( orm, ormFile );
                 u.getMappingFile().add( "META-INF/" + this.persistenceUnitName + ".xml" );
             }
-
-            m.setProperty( Marshaller.JAXB_SCHEMA_LOCATION, PERSISTENCE_NS + ' ' + PERSISTENCE_SCHEMA_LOCATION );
 
             final File persistenceFile = new File( metaInf, "persistence.xml" );
             this.log( Level.INFO, "writing", new Object[]
@@ -372,7 +391,7 @@ public final class PluginImpl extends Plugin
                     persistenceFile.getAbsolutePath()
                 } );
 
-            m.marshal( p, persistenceFile );
+            persistenceMarshaller.marshal( p, persistenceFile );
         }
         catch ( JAXBException e )
         {

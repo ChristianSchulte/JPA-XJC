@@ -38,34 +38,32 @@
     <author email="schulte2005@users.sourceforge.net">Christian Schulte</author>
   </properties>
   <body>
-    <!-- ******************************************************************* -->
+    <!-- *********************************************************************************************************** -->
     <release version="1.0-beta-1" date="2009-04-24"/>
-
-    <!-- ******************************************************************* -->
+    <!-- *********************************************************************************************************** -->
     <release version="1.0-beta-2" date="2009-05-03">
-      <action dev="schulte2005" type="update">
-        Updated to BSD-style licensing.
-      </action>
+      <action dev="schulte2005" type="update">Updated to BSD-style licensing.</action>
     </release>
-
-    <!-- ******************************************************************* -->
+    <!-- *********************************************************************************************************** -->
     <release version="1.0-beta-3" date="2009-05-07">
       <action dev="schulte2005" type="update"><![CDATA[
-        Updated to correctly remove package names from fully qualified class
-        names when building entity names.]]>
+      Updated to correctly remove package names from fully qualified class names when building entity names.]]>
       </action>
     </release>
-
-    <!-- ******************************************************************* -->
+    <!-- *********************************************************************************************************** -->
     <release version="1.0-beta-4" date="2009-06-02">
       <action dev="schulte2005" type="update"><![CDATA[
-        Updated to apply schema derived defaults to &lt;orm:column&gt; elements
-        of &lt;orm:id&gt;, &lt;orm:basic&gt; and &lt;orm:version&gt; customizations.]]>
+      Updated to apply schema derived defaults to &lt;orm:column&gt; elements of &lt;orm:id&gt;, &lt;orm:basic&gt; and
+      &lt;orm:version&gt; customizations.]]>
       </action>
       <action dev="schulte2005" type="fix"><![CDATA[
-        Added support for &lt;orm:id&gt; customizations. Versions prior to this
-        version do not support &lt;orm:id&gt; customizations.]]>
+      Added support for &lt;orm:id&gt; customizations. Versions prior to this version do not support &lt;orm:id&gt;
+      customizations.]]>
       </action>
+    </release>
+    <!-- *********************************************************************************************************** -->
+    <release version="1.0-beta-5" date="2009-12-22">
+      <action dev="schulte2005" type="update">Updated to use validating marshallers for writing XML files.</action>
     </release>
   </body>
 </document>

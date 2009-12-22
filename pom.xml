@@ -105,6 +105,22 @@
           <include>LICENSE.txt</include>
         </includes>
       </resource>
+      <resource>
+        <directory>src/main/jaxb</directory>
+        <filtering>false</filtering>
+        <targetPath>net/sourceforge/jpaxjc/ns/persistence</targetPath>
+        <includes>
+          <include>persistence_1_0.xsd</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>src/main/jaxb</directory>
+        <filtering>false</filtering>
+        <targetPath>net/sourceforge/jpaxjc/ns/persistence/orm</targetPath>
+        <includes>
+          <include>orm_1_0.xsd</include>
+        </includes>
+      </resource>
     </resources>
     <pluginManagement>
       <plugins>
