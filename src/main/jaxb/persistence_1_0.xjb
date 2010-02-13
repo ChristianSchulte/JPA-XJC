@@ -34,7 +34,7 @@
                xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
                xmlns:xs="http://www.w3.org/2001/XMLSchema"
                xmlns:persistence="http://java.sun.com/xml/ns/persistence"
-               jaxb:version="2.0">
+               version="2.0">
 
   <jaxb:bindings schemaLocation="persistence_1_0.xsd">
     <jaxb:schemaBindings>
