@@ -44,10 +44,27 @@ JPA-XJC
   Java persistence annotations. It does not generate code depending on libraries
   other than JPA 1.0 and does not introduce non-standard customization elements.
   The plugin provides a '-jpa' option which is enabled by adding its jar file to
-  the XJC classpath. That option takes two parameters. The first parameter is
-  the name of the persistence unit and the second parameter is a path to the
-  corresponding persistence unit root directory files are written to. See the
-  examples for further information.
+  the XJC classpath. When enabled, the following options can be used to control
+  the behavior of the plugin.
+
+    * -jpa <unit-name> <unit-root>
+
+    The '-jpa' option itself takes two mandatory arguments. The '<unit-name>'
+    argument specifies the name of the persistence unit and the '<unit-root>'
+    argument specifies the name of the persistence unit root directory.
+
+    * -persistenceSystemId (since 1.0-beta-6)
+
+    The optional '-persistenceSystemId' option can be used to specify a system id
+    to use in the 'schemaLocation' attribute of generated persistence unit XML
+    documents.
+    Default: http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd
+
+    * -ormSystemId (since 1.0-beta-6)
+
+    The optional '-ormSystemId' option can be used to specify a system id to use in
+    the 'schemaLocation' attribute of generated orm XML documents.
+    Default: http://java.sun.com/xml/ns/persistence/orm_1_0.xsd
 
 * Support
 

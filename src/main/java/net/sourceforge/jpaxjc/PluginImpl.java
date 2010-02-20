@@ -41,6 +41,7 @@ import com.sun.codemodel.JExpr;
 import com.sun.codemodel.JFieldVar;
 import com.sun.codemodel.JMethod;
 import com.sun.codemodel.JMod;
+import com.sun.codemodel.JOp;
 import com.sun.codemodel.JTryBlock;
 import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
@@ -166,8 +167,8 @@ public final class PluginImpl extends Plugin
     /** {@code http://java.sun.com/xml/ns/persistence} namespace URI. */
     private static final String PERSISTENCE_NS = "http://java.sun.com/xml/ns/persistence";
 
-    /** {@code http://java.sun.com/xml/ns/persistence} schema location. */
-    private static final String PERSISTENCE_SCHEMA_LOCATION =
+    /** Default {@code http://java.sun.com/xml/ns/persistence} schema system id. */
+    private static final String DEFAULT_PERSISTENCE_SYSTEM_ID =
         "http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd";
 
     /** {@code http://java.sun.com/xml/ns/persistence} classpath location. */
@@ -177,8 +178,8 @@ public final class PluginImpl extends Plugin
     /** {@code http://java.sun.com/xml/ns/persistence/orm} namespace URI. */
     private static final String ORM_NS = "http://java.sun.com/xml/ns/persistence/orm";
 
-    /** {@code http://java.sun.com/xml/ns/persistence/orm} schema location. */
-    private static final String ORM_SCHEMA_LOCATION = "http://java.sun.com/xml/ns/persistence/orm_1_0.xsd";
+    /** Default {@code http://java.sun.com/xml/ns/persistence/orm} schema system id. */
+    private static final String DEFAULT_ORM_SYSTEM_ID = "http://java.sun.com/xml/ns/persistence/orm_1_0.xsd";
 
     /** {@code http://java.sun.com/xml/ns/persistence/orm} classpath location. */
     private static final String ORM_SCHEMA_CLASSPATH_LOCATION =
@@ -186,6 +187,15 @@ public final class PluginImpl extends Plugin
 
     /** Prefix added to messages logged to the console. */
     private static final String MESSAGE_PREFIX = "JPA-XJC";
+
+    /** Constant for the {@code -jpa} option. */
+    private static final String JPA_OPTION_NAME = "-jpa";
+
+    /** Constant for the {@code -persistenceSystemId} option. */
+    private static final String PERSISTENCE_SYSTEM_ID_OPTION_NAME = "-persistenceSystemId";
+
+    /** Constant for the {@code -ormSystemId} option. */
+    private static final String ORM_SYSTEM_ID_OPTION_NAME = "-ormSystemId";
 
     /** The persistence unit name of the generated unit. */
     private String persistenceUnitName;
@@ -196,10 +206,16 @@ public final class PluginImpl extends Plugin
     /** Options passed to the plugin. */
     private Options options;
 
+    /** {@code http://java.sun.com/xml/ns/persistence} schema system id. */
+    private String persistenceSystemId = DEFAULT_PERSISTENCE_SYSTEM_ID;
+
+    /** {@code http://java.sun.com/xml/ns/persistence/orm} schema system id. */
+    private String ormSystemId = DEFAULT_ORM_SYSTEM_ID;
+
     /** Set of mapped classes. */
     private final Set<String> mappedClasses = new HashSet<String>();
 
-    /** Emtpy JType array. */
+    /** Empty JType array. */
     private static final JType[] NO_JTYPES =
     {
     };
@@ -217,11 +233,23 @@ public final class PluginImpl extends Plugin
     public int parseArgument( final Options opt, final String[] args, int i )
         throws BadCommandLineException, IOException
     {
-        if ( args[i].equals( "-jpa" ) )
+        if ( JPA_OPTION_NAME.equals( args[i] ) )
         {
-            this.persistenceUnitName = opt.requireArgument( "-jpa", args, ++i );
-            this.persistenceUnitRoot = new File( opt.requireArgument( "-jpa", args, ++i ) );
+            this.persistenceUnitName = opt.requireArgument( JPA_OPTION_NAME, args, ++i );
+            this.persistenceUnitRoot = new File( opt.requireArgument( JPA_OPTION_NAME, args, ++i ) );
             return 3;
+        }
+
+        if ( PERSISTENCE_SYSTEM_ID_OPTION_NAME.equals( args[i] ) )
+        {
+            this.persistenceSystemId = opt.requireArgument( PERSISTENCE_SYSTEM_ID_OPTION_NAME, args, ++i );
+            return 2;
+        }
+
+        if ( ORM_SYSTEM_ID_OPTION_NAME.equals( args[i] ) )
+        {
+            this.ormSystemId = opt.requireArgument( ORM_SYSTEM_ID_OPTION_NAME, args, ++i );
+            return 2;
         }
 
         return 0;
@@ -230,14 +258,17 @@ public final class PluginImpl extends Plugin
     @Override
     public String getUsage()
     {
+        final String lineSeparator = System.getProperty( "line.separator" );
         final StringBuilder b = new StringBuilder();
-        b.append( "  " ).append( "-jpa               :  " ).
-            append( this.getMessage( "usage", null ) ).append( System.getProperty( "line.separator" ) );
 
-        b.append( "                     :  " ).append( this.getMessage( "usageUnitName", null ) ).
-            append( System.getProperty( "line.separator" ) );
+        b.append( "  -jpa               :  " ).append( getMessage( "usage" ) ).append( lineSeparator );
+        b.append( "                     :  " ).append( getMessage( "usageUnitName" ) ).append( lineSeparator );
+        b.append( "                     :  " ).append( getMessage( "usageUnitRoot" ) ).append( lineSeparator );
+        b.append( "                     :  " ).append( getMessage( "jpaSystemId", this.persistenceSystemId ) ).
+            append( lineSeparator );
 
-        b.append( "                     :  " ).append( this.getMessage( "usageUnitRoot", null ) );
+        b.append( "                     :  " ).append( getMessage( "ormSystemId", this.ormSystemId ) );
+
         return b.toString();
     }
 
@@ -264,7 +295,7 @@ public final class PluginImpl extends Plugin
         boolean success = true;
         this.options = options;
 
-        this.log( Level.INFO, "title", null );
+        this.log( Level.INFO, "title" );
 
         try
         {
@@ -357,11 +388,11 @@ public final class PluginImpl extends Plugin
             persistenceMarshaller.setSchema( persistenceSchema );
             persistenceMarshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
             persistenceMarshaller.setProperty( Marshaller.JAXB_SCHEMA_LOCATION,
-                                               PERSISTENCE_NS + ' ' + PERSISTENCE_SCHEMA_LOCATION );
+                                               PERSISTENCE_NS + ' ' + this.persistenceSystemId );
 
             ormMarshaller.setSchema( ormSchema );
             ormMarshaller.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
-            ormMarshaller.setProperty( Marshaller.JAXB_SCHEMA_LOCATION, ORM_NS + ' ' + ORM_SCHEMA_LOCATION );
+            ormMarshaller.setProperty( Marshaller.JAXB_SCHEMA_LOCATION, ORM_NS + ' ' + this.ormSystemId );
 
             final File metaInf = new File( this.persistenceUnitRoot, "META-INF" );
             if ( !metaInf.exists() )
@@ -376,20 +407,14 @@ public final class PluginImpl extends Plugin
                  !orm.getTableGenerator().isEmpty() )
             {
                 final File ormFile = new File( metaInf, this.persistenceUnitName + ".xml" );
-                this.log( Level.INFO, "writing", new Object[]
-                    {
-                        ormFile.getAbsolutePath()
-                    } );
+                this.log( Level.INFO, "writing", ormFile.getAbsolutePath() );
 
                 ormMarshaller.marshal( orm, ormFile );
                 u.getMappingFile().add( "META-INF/" + this.persistenceUnitName + ".xml" );
             }
 
             final File persistenceFile = new File( metaInf, "persistence.xml" );
-            this.log( Level.INFO, "writing", new Object[]
-                {
-                    persistenceFile.getAbsolutePath()
-                } );
+            this.log( Level.INFO, "writing", persistenceFile.getAbsolutePath() );
 
             persistenceMarshaller.marshal( p, persistenceFile );
         }
@@ -1014,17 +1039,14 @@ public final class PluginImpl extends Plugin
         t.setName( f.getPropertyInfo().getName( false ) );
         a.getTransient().add( t );
 
-        if ( f.getRawType().equals( f.parent().parent().getCodeModel().ref(
-            javax.xml.datatype.XMLGregorianCalendar.class ) ) )
+        if ( f.getRawType().equals( f.parent().parent().getCodeModel().ref( XMLGregorianCalendar.class ) ) )
         {
             a.getBasic().add( this.toTemporalBasic( f ) );
         }
         else
         {
-            this.log( Level.WARNING, "cannotMapProperty", new Object[]
-                {
-                    f.getPropertyInfo().getName( true ), f.parent().implClass.binaryName()
-                } );
+            this.log( Level.WARNING, "cannotMapProperty", f.getPropertyInfo().getName( true ),
+                      f.parent().implClass.binaryName() );
 
         }
 
@@ -1037,17 +1059,14 @@ public final class PluginImpl extends Plugin
         t.setName( f.getPropertyInfo().getName( false ) );
         a.getTransient().add( t );
 
-        if ( f.getRawType().equals( f.parent().parent().getCodeModel().ref(
-            javax.xml.datatype.XMLGregorianCalendar.class ) ) )
+        if ( f.getRawType().equals( f.parent().parent().getCodeModel().ref( XMLGregorianCalendar.class ) ) )
         {
             a.getBasic().add( this.toTemporalBasic( f ) );
         }
         else
         {
-            this.log( Level.WARNING, "cannotMapProperty", new Object[]
-                {
-                    f.getPropertyInfo().getName( true ), f.parent().implClass.binaryName()
-                } );
+            this.log( Level.WARNING, "cannotMapProperty", f.getPropertyInfo().getName( true ),
+                      f.parent().implClass.binaryName() );
 
         }
 
@@ -1731,27 +1750,40 @@ public final class PluginImpl extends Plugin
         final String getterName = ( type == Boolean.TYPE || type == Boolean.class ? "is" : "get" ) + publicName;
         final JFieldVar field = c.implClass.field( JMod.PROTECTED, type, name );
         final JMethod getter = c.implClass.method( JMod.PUBLIC, type, getterName );
+        getter.body().directStatement( "// " + getMessage( "title" ) );
         getter.body()._return( field );
 
         final JMethod setter = c.implClass.method( JMod.PUBLIC, c.parent().getCodeModel().VOID,
                                                    "set" + String.valueOf( chars ) );
 
-        final JVar valueParam = setter.param( type, "value" );
+        final JVar valueParam = setter.param( JMod.FINAL, type, "value" );
+        setter.body().directStatement( "// " + getMessage( "title" ) );
         setter.body().assign( JExpr._this().ref( field ), valueParam );
+
+        getter.javadoc().append( "Gets the value of the " + name + " property." );
+        getter.javadoc().addReturn().append( "The value of the " + name + " property." );
+
+        setter.javadoc().append( "Sets the value of the " + name + " property." );
+        setter.javadoc().addParam( valueParam ).append( "The new value of the " + name + " property." );
     }
 
     private void generateCollectionSetter( final JCodeModel cm, final ClassOutline c, final CPropertyInfo p )
     {
         final JFieldVar field = c.implClass.fields().get( p.getName( false ) );
         final JMethod setter = c.implClass.method( JMod.PUBLIC, cm.VOID, "set" + p.getName( true ) );
-        final JVar valueParam = setter.param( field.type(), "value" );
+        final JVar valueParam = setter.param( JMod.FINAL, field.type(), "value" );
         final JBlock body = setter.body();
+        body.directStatement( "// " + getMessage( "title" ) );
         body.assign( JExpr._this().ref( field ), valueParam );
+
+        setter.javadoc().append( "Sets the value of the " + p.getName( false ) + " property." );
+        setter.javadoc().addParam( valueParam ).append( "The new value of the " + p.getName( false ) + " property." );
     }
 
     private void generateTemporalBasic( final FieldOutline f )
     {
         // Getter.
+        final String lineSeparator = System.getProperty( "line.separator" );
         final JFieldVar field = f.parent().implClass.field( JMod.PROTECTED, f.parent().parent().getCodeModel().ref(
             "java.util.Calendar" ), "jpa" + f.getPropertyInfo().getName( true ) );
 
@@ -1759,17 +1791,29 @@ public final class PluginImpl extends Plugin
             f.parent().implClass.method( JMod.PUBLIC, f.parent().parent().getCodeModel().ref( Calendar.class ),
                                          "getJpa" + f.getPropertyInfo().getName( true ) );
 
+        getter.body().directStatement( "// " + getMessage( "title" ) );
         getter.body().assign( JExpr.refthis( field.name() ), f.parent()._package().objectFactory().
             staticInvoke( "createCalendar" ).arg( JExpr.refthis( f.getPropertyInfo().getName( false ) ) ) );
 
         getter.body()._return( JExpr.refthis( field.name() ) );
 
+        getter.javadoc().append(
+            "Gets the value of the jpa" + f.getPropertyInfo().getName( true ) + " property." + lineSeparator );
+
+        getter.javadoc().append(
+            "<p>This method returns the value of the " + f.getPropertyInfo().getName( false ) + " property " +
+            "transformed to a " + Calendar.class.getName() + " instance.</p>" + lineSeparator );
+
+        getter.javadoc().addReturn().append(
+            "The value of the jpa" + f.getPropertyInfo().getName( true ) + " property." );
+
         // Setter.
         final JMethod setter = f.parent().implClass.method(
             JMod.PUBLIC, f.parent().parent().getCodeModel().VOID, "setJpa" + f.getPropertyInfo().getName( true ) );
 
-        final JVar calendar = setter.param( Calendar.class, "value" );
+        final JVar calendar = setter.param( JMod.FINAL, Calendar.class, "value" );
 
+        setter.body().directStatement( "// " + getMessage( "title" ) );
         setter.body().assign( JExpr.refthis( field.name() ), calendar );
         setter.body().assign( JExpr.refthis( f.getPropertyInfo().getName( false ) ), f.parent()._package().
             objectFactory().staticInvoke( "createXMLGregorianCalendar" ).arg( calendar ) );
@@ -1779,6 +1823,17 @@ public final class PluginImpl extends Plugin
         transientSetter.body().assign( JExpr.refthis( field.name() ), f.parent()._package().objectFactory().
             staticInvoke( "createCalendar" ).arg( transientSetter.listParams()[0] ) );
 
+        setter.javadoc().append(
+            "Sets the value of the jpa" + f.getPropertyInfo().getName( true ) + " property." + lineSeparator );
+
+        setter.javadoc().append(
+            "<p>This method sets the value of the " + f.getPropertyInfo().getName( false ) + " property by " +
+            "transforming {@code " + calendar.name() + "} to a " + XMLGregorianCalendar.class.getName() +
+            " instance.</p>" + lineSeparator );
+
+        setter.javadoc().addParam( calendar ).append(
+            "The new value of the jpa" + f.getPropertyInfo().getName( true ) + " property." );
+
     }
 
     private void generateAdapterMethods( final JCodeModel cm, final PackageOutline p )
@@ -1787,33 +1842,54 @@ public final class PluginImpl extends Plugin
 
         // createCalendar
         final JMethod createCalendar = of.method( JMod.NONE | JMod.STATIC, cm.ref( Calendar.class ), "createCalendar" );
-        JVar value = createCalendar.param( cm.ref( XMLGregorianCalendar.class ), "value" );
+        JVar value = createCalendar.param( JMod.FINAL, XMLGregorianCalendar.class, "value" );
+        createCalendar.body().directStatement( "// " + getMessage( "title" ) );
+        createCalendar.body()._return(
+            JOp.cond( value.eq( JExpr._null() ), JExpr._null(), value.invoke( "toGregorianCalendar" ) ) );
 
-        JConditional nullCheck = createCalendar.body()._if( value.eq( JExpr._null() ) );
-        nullCheck._then()._return( JExpr._null() );
-        nullCheck._else()._return( value.invoke( "toGregorianCalendar" ) );
+        createCalendar.javadoc().append( "Creates a " + Calendar.class.getName() + " instance from a " +
+                                         XMLGregorianCalendar.class.getName() + " instance." );
+
+        createCalendar.javadoc().addParam( value ).append(
+            "The " + XMLGregorianCalendar.class.getName() + " instance or {@code null}." );
+
+        createCalendar.javadoc().addReturn().append(
+            "A " + Calendar.class.getName() + " instance created from {@code " + value.name() +
+            "} or {@code null} if {@code " + value.name() + "} is {@code null}." );
 
         // createXMLGregorianCalendar
         final JMethod createXMLGregorianCalendar =
-            of.method( JMod.NONE | JMod.STATIC, cm.ref( XMLGregorianCalendar.class ), "createXMLGregorianCalendar" );
+            of.method( JMod.NONE | JMod.STATIC, XMLGregorianCalendar.class, "createXMLGregorianCalendar" );
 
-        value = createXMLGregorianCalendar.param( cm.ref( Calendar.class ), "value" );
+        createXMLGregorianCalendar.body().directStatement( "// " + getMessage( "title" ) );
+        value = createXMLGregorianCalendar.param( JMod.FINAL, Calendar.class, "value" );
 
-        nullCheck = createXMLGregorianCalendar.body()._if( value.eq( JExpr._null() ) );
-        nullCheck._then()._return( JExpr._null() );
+        final JTryBlock tryBlock = createXMLGregorianCalendar.body()._try();
+        final JConditional notNull = tryBlock.body()._if( value.ne( JExpr._null() ) );
 
-        final JTryBlock tryBlock = nullCheck._else()._try();//
-
-        final JVar calendar = tryBlock.body().decl( cm.ref( GregorianCalendar.class ), "calendar" );
+        final JVar calendar = notNull._then().decl( cm.ref( GregorianCalendar.class ), "calendar" );
         calendar.init( JExpr._new( cm.ref( GregorianCalendar.class ) ) );
-        tryBlock.body().add( calendar.invoke( "setTimeZone" ).arg( value.invoke( "getTimeZone" ) ) );
-        tryBlock.body().add( calendar.invoke( "setTimeInMillis" ).arg( value.invoke( "getTimeInMillis" ) ) );
-
-        tryBlock.body()._return( cm.ref( DatatypeFactory.class ).staticInvoke( "newInstance" ).invoke(
+        notNull._then().add( calendar.invoke( "setTimeZone" ).arg( value.invoke( "getTimeZone" ) ) );
+        notNull._then().add( calendar.invoke( "setTimeInMillis" ).arg( value.invoke( "getTimeInMillis" ) ) );
+        notNull._then()._return( cm.ref( DatatypeFactory.class ).staticInvoke( "newInstance" ).invoke(
             "newXMLGregorianCalendar" ).arg( calendar ) );
+
+        tryBlock.body()._return( JExpr._null() );
 
         final JCatchBlock catchBlock = tryBlock._catch( cm.ref( DatatypeConfigurationException.class ) );
         catchBlock.body()._throw( JExpr._new( cm.ref( AssertionError.class ) ).arg( catchBlock.param( "e" ) ) );
+
+        createXMLGregorianCalendar.javadoc().append(
+            "Creates a " + XMLGregorianCalendar.class.getName() + " instance from a " + Calendar.class.getName() +
+            " instance." );
+
+        createXMLGregorianCalendar.javadoc().addParam( value ).append(
+            "The " + Calendar.class.getName() + " instance or {@code null}." );
+
+        createXMLGregorianCalendar.javadoc().addReturn().append(
+            "A " + XMLGregorianCalendar.class.getName() + " instance created from {@code " + value.name() +
+            "} or {@code null} if {@code " + value.name() + "} is {@code null}." );
+
     }
 
     // --
@@ -3071,16 +3147,17 @@ public final class PluginImpl extends Plugin
         return this.getSchemaSimpleType( type.getSimpleBaseType(), name );
     }
 
-    private String getMessage( final String key, final Object args )
+    private static String getMessage( final String key, final Object... args )
     {
-        final ResourceBundle bundle = ResourceBundle.getBundle( "net/sourceforge/jpaxjc/PluginImpl" );
-        return new MessageFormat( bundle.getString( key ) ).format( args );
+        return MessageFormat.format(
+            ResourceBundle.getBundle( "net/sourceforge/jpaxjc/PluginImpl" ).getString( key ), args );
+
     }
 
-    private void log( final Level level, final String key, final Object args )
+    private void log( final Level level, final String key, final Object... args )
     {
         final StringBuffer b = new StringBuffer().append( "[" ).append( MESSAGE_PREFIX ).append( "] [" ).
-            append( level.getLocalizedName() ).append( "] " ).append( this.getMessage( key, args ) );
+            append( level.getLocalizedName() ).append( "] " ).append( getMessage( key, args ) );
 
         int logLevel = Level.WARNING.intValue();
         if ( this.options != null && !this.options.quiet )

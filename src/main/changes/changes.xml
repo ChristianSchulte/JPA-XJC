@@ -65,5 +65,12 @@
     <release version="1.0-beta-5" date="2009-12-22">
       <action dev="schulte2005" type="update">Updated to use validating marshallers for writing XML files.</action>
     </release>
+    <!-- *********************************************************************************************************** -->
+    <release version="1.0-beta-6" date="2010-02-20">
+      <action dev="schulte2005" type="update">Added Javadoc to generated methods.</action>
+      <action dev="schulte2005" type="update">Added final modifier to generated method parameters.</action>
+      <action dev="schulte2005" type="update">Added &lt;code&gt;-persistenceSystemId&lt;/code&gt; option.</action>
+      <action dev="schulte2005" type="update">Added &lt;code&gt;-ormSystemId&lt;/code&gt; option.</action>
+    </release>
   </body>
 </document>
