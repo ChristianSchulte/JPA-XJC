@@ -102,24 +102,8 @@ Examples
 * Maven
 
   Maven users simply add the JPA-XJC plugin as a dependency to a JAXB plugin of
-  choice. For this to work, the JPA-XJC repository needs to be put in a POM or
-  the Maven settings.
-
----
-<repository>
-  <id>jpaxjcplugin-releases</id>
-  <url>http://jpaxjcplugin.sourceforge.net/maven2/releases</url>
-  <releases>
-    <enabled>true</enabled>
-  </releases>
-  <snapshots>
-    <enabled>false</enabled>
-  </snapshots>
-</repository>
----
-
-  The following example demonstrates the use of the JPA-XJC Plugin with the
-  Mojo jaxb2-maven-plugin.
+  choice. The following example demonstrates the use of the JPA-XJC Plugin with
+  the Mojo jaxb2-maven-plugin.
 
 ---
 <plugin>

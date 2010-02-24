@@ -35,7 +35,7 @@
          xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache.org/xsd/decoration-1.0.0.xsd"
          name="${project.name}">
   <poweredBy>
-    <logo href="http://sourceforge.net/donate/index.php?group_id=256748" img="http://images.sourceforge.net/images/project-support.jpg" name="Support This Project"/>
+    <logo href="http://sourceforge.net/donate/index.php?group_id=306895" img="http://images.sourceforge.net/images/project-support.jpg" name="Support This Project"/>
   </poweredBy>
   <skin>
     <groupId>org.apache.maven.skins</groupId>
@@ -44,8 +44,8 @@
   </skin>
   <bannerRight>
     <name>Sourceforge.net</name>
-    <src>http://sflogo.sourceforge.net/sflogo.php?group_id=256748&amp;type=11</src>
-    <href>http://sourceforge.net/projects/jpaxjcplugin</href>
+    <src>http://sflogo.sourceforge.net/sflogo.php?group_id=306895&amp;type=11</src>
+    <href>http://sourceforge.net/projects/jpaxjc</href>
   </bannerRight>
   <body>
     <head>
@@ -53,22 +53,21 @@
       <meta name="keywords" lang="en" content="jpa, xjc, jaxb, persistence, annotations, plugin, schema, java, xml, xsd, orm, orm.xml"/>
       <!-- Piwik -->
       <script type="text/javascript"><![CDATA[
-      var pkBaseURL = (("https:" == document.location.protocol) ? "https://sourceforge.net/apps/piwik/jpaxjcplugin/" : "http://sourceforge.net/apps/piwik/jpaxjcplugin/");
+      var pkBaseURL = (("https:" == document.location.protocol) ? "https://sourceforge.net/apps/piwik/jpaxjc/" : "http://sourceforge.net/apps/piwik/jpaxjc/");
       document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));]]>
       </script>
       <script type="text/javascript"><![CDATA[
-      piwik_action_name = '';
-      piwik_idsite = 1;
-      piwik_url = pkBaseURL + "piwik.php";
-      piwik_log(piwik_action_name, piwik_idsite, piwik_url);]]>
+      try {
+      var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", 1);
+      piwikTracker.trackPageView();
+      piwikTracker.enableLinkTracking();
+      } catch( err ) {}]]>
       </script>
-      <object>
-        <noscript>
-          <p>
-            <img src="http://sourceforge.net/apps/piwik/jpaxjcplugin/piwik.php?idsite=1" alt="piwik"/>
-          </p>
-        </noscript>
-      </object>
+      <noscript>
+        <p>
+          <img src="http://sourceforge.net/apps/piwik/jpaxjc/piwik.php?idsite=1" style="border:0" alt=""/>
+        </p>
+      </noscript>
       <!-- End Piwik Tag -->
     </head>
 
@@ -79,11 +78,10 @@
     </menu>
 
     <menu name="Sourceforge">
-      <item name="Project Summary" href="https://sourceforge.net/projects/jpaxjcplugin/"/>
-      <item name="MantisBT" href="http://apps.sourceforge.net/mantisbt/jpaxjcplugin/"/>
-      <item name="IdeaTorrent" href="http://apps.sourceforge.net/ideatorrent/jpaxjcplugin/"/>
-      <item name="MediaWiki" href="https://apps.sourceforge.net/mediawiki/jpaxjcplugin/index.php?title=Main_Page"/>
-      <item name="Stats" href="http://sourceforge.net/project/stats/?group_id=256748&amp;ugn=jpaxjcplugin"/>
+      <item name="Project Summary" href="http://sourceforge.net/projects/jpaxjc/"/>
+      <item name="MantisBT" href="http://apps.sourceforge.net/mantisbt/jpaxjc/"/>
+      <item name="MediaWiki" href="http://apps.sourceforge.net/mediawiki/jpaxjc/index.php?title=Main_Page"/>
+      <item name="Stats" href="http://sourceforge.net/project/stats/?group_id=306895&amp;ugn=jpaxjc"/>
     </menu>
 
     <menu ref="reports" />

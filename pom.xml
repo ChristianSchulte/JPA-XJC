@@ -38,16 +38,16 @@
   <name>JPA-XJC</name>
   <version>1.0-beta-7-SNAPSHOT</version>
   <description>JAXB 2.1 Schema to Java compiler plugin for annotating schema derived classes with Java persistence annotations.</description>
-  <url>http://jpaxjcplugin.sourceforge.net</url>
+  <url>http://jpaxjc.sourceforge.net</url>
   <inceptionYear>2009</inceptionYear>
   <organization>
     <name>The JPA-XJC Community</name>
-    <url>http://jpaxjcplugin.sourceforge.net</url>
+    <url>http://jpaxjc.sourceforge.net</url>
   </organization>
   <licenses>
     <license>
       <name>The JPA-XJC Project Copyright</name>
-      <url>http://jpaxjcplugin.sourceforge.net/LICENSE.txt</url>
+      <url>http://jpaxjc.sourceforge.net/LICENSE.txt</url>
       <distribution>repo</distribution>
     </license>
   </licenses>
@@ -59,35 +59,35 @@
   </developers>
   <issueManagement>
     <system>MantisBT</system>
-    <url>http://apps.sourceforge.net/mantisbt/jpaxjcplugin/</url>
+    <url>http://apps.sourceforge.net/mantisbt/jpaxjc/</url>
   </issueManagement>
   <mailingLists>
     <mailingList>
-      <name>jpaxjcplugin-users</name>
-      <subscribe>http://lists.sourceforge.net/lists/listinfo/jpaxjcplugin-users</subscribe>
-      <unsubscribe>http://lists.sourceforge.net/lists/listinfo/jpaxjcplugin-users</unsubscribe>
-      <post>jpaxjcplugin-users@lists.sourceforge.net</post>
-      <archive>http://sourceforge.net/mailarchive/forum.php?forum=jpaxjcplugin-users</archive>
+      <name>jpaxjc-users</name>
+      <subscribe>http://lists.sourceforge.net/lists/listinfo/jpaxjc-users</subscribe>
+      <unsubscribe>http://lists.sourceforge.net/lists/listinfo/jpaxjc-users</unsubscribe>
+      <post>jpaxjc-users@lists.sourceforge.net</post>
+      <archive>http://sourceforge.net/mailarchive/forum.php?forum=jpaxjc-users</archive>
     </mailingList>
     <mailingList>
-      <name>jpaxjcplugin-svn</name>
-      <subscribe>http://lists.sourceforge.net/lists/listinfo/jpaxjcplugin-svn</subscribe>
-      <unsubscribe>http://lists.sourceforge.net/lists/listinfo/jpaxjcplugin-svn</unsubscribe>
-      <post>jpaxjcplugin-svn@lists.sourceforge.net</post>
-      <archive>http://sourceforge.net/mailarchive/forum.php?forum=jpaxjcplugin-svn</archive>
+      <name>jpaxjc-svn</name>
+      <subscribe>http://lists.sourceforge.net/lists/listinfo/jpaxjc-svn</subscribe>
+      <unsubscribe>http://lists.sourceforge.net/lists/listinfo/jpaxjc-svn</unsubscribe>
+      <post>jpaxjc-svn@lists.sourceforge.net</post>
+      <archive>http://sourceforge.net/mailarchive/forum.php?forum=jpaxjc-svn</archive>
     </mailingList>
     <mailingList>
-      <name>jpaxjcplugin-notifications</name>
-      <subscribe>http://lists.sourceforge.net/lists/listinfo/jpaxjcplugin-notifications</subscribe>
-      <unsubscribe>http://lists.sourceforge.net/lists/listinfo/jpaxjcplugin-notifications</unsubscribe>
-      <post>jpaxjcplugin-notifications@lists.sourceforge.net</post>
-      <archive>http://sourceforge.net/mailarchive/forum.php?forum=jpaxjcplugin-notifications</archive>
+      <name>jpaxjc-notifications</name>
+      <subscribe>http://lists.sourceforge.net/lists/listinfo/jpaxjc-notifications</subscribe>
+      <unsubscribe>http://lists.sourceforge.net/lists/listinfo/jpaxjc-notifications</unsubscribe>
+      <post>jpaxjc-notifications@lists.sourceforge.net</post>
+      <archive>http://sourceforge.net/mailarchive/forum.php?forum=jpaxjc-notifications</archive>
     </mailingList>
   </mailingLists>
   <scm>
-    <connection>scm:svn:https://jpaxjcplugin.svn.sourceforge.net/svnroot/jpaxjcplugin/trunk</connection>
-    <developerConnection>scm:svn:https://jpaxjcplugin.svn.sourceforge.net/svnroot/jpaxjcplugin/trunk</developerConnection>
-    <url>http://jpaxjcplugin.svn.sourceforge.net/viewvc/jpaxjcplugin/trunk</url>
+    <connection>scm:svn:https://jpaxjc.svn.sourceforge.net/svnroot/jpaxjc/trunk</connection>
+    <developerConnection>scm:svn:https://jpaxjc.svn.sourceforge.net/svnroot/jpaxjc/trunk</developerConnection>
+    <url>http://jpaxjc.svn.sourceforge.net/viewvc/jpaxjc/trunk</url>
   </scm>
   <build>
     <resources>
@@ -178,7 +178,7 @@
           <version>2.0</version>
           <configuration>
             <lineLength>120</lineLength>
-            <tagBase>https://jpaxjcplugin.svn.sourceforge.net/svnroot/jpaxjcplugin/tags</tagBase>
+            <tagBase>https://jpaxjc.svn.sourceforge.net/svnroot/jpaxjc/tags</tagBase>
           </configuration>
         </plugin>
         <plugin>
@@ -408,7 +408,7 @@
         <!-- version>2.3</version Upgrade breaks changes report due to http://jira.codehaus.org/browse/MCHANGES-190 -->
         <configuration>
           <issueLinkTemplatePerSystem>
-            <MantisBT>http://apps.sourceforge.net/mantisbt/jpaxjcplugin/view.php?id=%ISSUE%</MantisBT>
+            <MantisBT>http://apps.sourceforge.net/mantisbt/jpaxjc/view.php?id=%ISSUE%</MantisBT>
           </issueLinkTemplatePerSystem>
           <reportSets>
             <reportSet>
@@ -455,22 +455,6 @@
       <optional>true</optional>
     </dependency>
   </dependencies>
-  <distributionManagement>
-    <repository>
-      <id>jpaxjcplugin-releases</id>
-      <name>JPA XJC Release Repository</name>
-      <url>scp://shell.sourceforge.net/home/groups/j/jp/jpaxjcplugin/htdocs/maven2/releases</url>
-    </repository>
-    <snapshotRepository>
-      <id>jpaxjcplugin-snapshots</id>
-      <name>JPA XJC Snapshot Repository</name>
-      <url>scp://shell.sourceforge.net/home/groups/j/jp/jpaxjcplugin/htdocs/maven2/snapshots</url>
-    </snapshotRepository>
-    <site>
-      <id>jpaxjcplugin-site</id>
-      <url>scp://shell.sourceforge.net/home/groups/j/jp/jpaxjcplugin/htdocs</url>
-    </site>
-  </distributionManagement>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
