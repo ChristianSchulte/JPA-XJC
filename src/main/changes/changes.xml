@@ -78,5 +78,10 @@
       group id and prepared for synching to the central Maven repository.
       </action>
     </release>
+    <!-- *********************************************************************************************************** -->
+    <release version="1.0.1" date="2010-08-18">
+      <action dev="schulte2005" type="fix"><![CDATA[Added an @XmlTransient annotation to generated JPA properties.]]>
+      </action>
+    </release>
   </body>
 </document>
