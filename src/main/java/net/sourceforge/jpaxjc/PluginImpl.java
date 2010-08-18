@@ -1796,6 +1796,8 @@ public final class PluginImpl extends Plugin
         final JFieldVar field = f.parent().implClass.field( JMod.PROTECTED, f.parent().parent().getCodeModel().ref(
             "java.util.Calendar" ), "jpa" + f.getPropertyInfo().getName( true ) );
 
+        field.annotate( XmlTransient.class );
+
         final JMethod getter =
             f.parent().implClass.method( JMod.PUBLIC, f.parent().parent().getCodeModel().ref( Calendar.class ),
                                          "getJpa" + f.getPropertyInfo().getName( true ) );
