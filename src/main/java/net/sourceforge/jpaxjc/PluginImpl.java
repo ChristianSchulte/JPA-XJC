@@ -400,11 +400,17 @@ public final class PluginImpl extends Plugin
                 success = metaInf.mkdirs();
             }
 
-            if ( orm.getAccess() != null || orm.getCatalog() != null || orm.getDescription() != null ||
-                 !orm.getNamedNativeQuery().isEmpty() || !orm.getNamedQuery().isEmpty() || orm.getPackage() != null ||
-                 orm.getPersistenceUnitMetadata() != null || orm.getSchema() != null ||
-                 !orm.getSequenceGenerator().isEmpty() || !orm.getSqlResultSetMapping().isEmpty() ||
-                 !orm.getTableGenerator().isEmpty() )
+            if ( orm.getAccess() != null
+                 || orm.getCatalog() != null
+                 || orm.getDescription() != null
+                 || !orm.getNamedNativeQuery().isEmpty()
+                 || !orm.getNamedQuery().isEmpty()
+                 || orm.getPackage() != null
+                 || orm.getPersistenceUnitMetadata() != null
+                 || orm.getSchema() != null
+                 || !orm.getSequenceGenerator().isEmpty()
+                 || !orm.getSqlResultSetMapping().isEmpty()
+                 || !orm.getTableGenerator().isEmpty() )
             {
                 final File ormFile = new File( metaInf, this.persistenceUnitName + ".xml" );
                 this.log( Level.INFO, "writing", ormFile.getAbsolutePath() );
@@ -433,8 +439,8 @@ public final class PluginImpl extends Plugin
     private void toMappedSuperclass( final Outline outline, final ClassOutline c, final EntityMappings orm )
         throws JAXBException
     {
-        if ( !this.mappedClasses.contains( c.implClass.binaryName() ) &&
-             c.target.getCustomizations().find( ORM_NS, "mapped-superclass" ) != null )
+        if ( !this.mappedClasses.contains( c.implClass.binaryName() )
+             && c.target.getCustomizations().find( ORM_NS, "mapped-superclass" ) != null )
         {
             final CPluginCustomization pc = c.target.getCustomizations().find( ORM_NS, "mapped-superclass" );
             final MappedSuperclass mappedSuperclass =
@@ -455,8 +461,8 @@ public final class PluginImpl extends Plugin
     private void toEmbeddable( final ClassOutline c, final EntityMappings orm )
         throws JAXBException
     {
-        if ( !this.mappedClasses.contains( c.implClass.binaryName() ) &&
-             c.target.getCustomizations().find( ORM_NS, "embeddable" ) != null )
+        if ( !this.mappedClasses.contains( c.implClass.binaryName() )
+             && c.target.getCustomizations().find( ORM_NS, "embeddable" ) != null )
         {
             final CPluginCustomization pc = c.target.getCustomizations().find( ORM_NS, "embeddable" );
             final Embeddable embeddable = JAXB.unmarshal( new DOMSource( pc.element ), Embeddable.class );
@@ -947,9 +953,9 @@ public final class PluginImpl extends Plugin
         final String typeName = f.getRawType().binaryName();
         final JCodeModel cm = f.parent().parent().getCodeModel();
 
-        if ( typeName.equals( cm.ref( java.util.Date.class ).binaryName() ) ||
-             typeName.equals( cm.ref( java.sql.Date.class ).binaryName() ) ||
-             typeName.equals( cm.ref( Calendar.class ).binaryName() ) )
+        if ( typeName.equals( cm.ref( java.util.Date.class ).binaryName() )
+             || typeName.equals( cm.ref( java.sql.Date.class ).binaryName() )
+             || typeName.equals( cm.ref( Calendar.class ).binaryName() ) )
         {
             basic.setTemporal( TemporalType.DATE );
         }
@@ -1152,8 +1158,8 @@ public final class PluginImpl extends Plugin
                 columnEmpty = false;
             }
 
-            if ( this.getSchemaSimpleType( type, "decimal" ) != null &&
-                 ( col.getScale() == null || col.getPrecision() == null ) )
+            if ( this.getSchemaSimpleType( type, "decimal" ) != null
+                 && ( col.getScale() == null || col.getPrecision() == null ) )
             {
                 XSSimpleType schemaType = this.getSchemaSimpleType( type, "integer" );
                 if ( schemaType != null && col.getScale() == null )
@@ -1801,8 +1807,8 @@ public final class PluginImpl extends Plugin
             "Gets the value of the jpa" + f.getPropertyInfo().getName( true ) + " property." + lineSeparator );
 
         getter.javadoc().append(
-            "<p>This method returns the value of the " + f.getPropertyInfo().getName( false ) + " property " +
-            "transformed to a " + Calendar.class.getName() + " instance.</p>" + lineSeparator );
+            "<p>This method returns the value of the " + f.getPropertyInfo().getName( false ) + " property "
+            + "transformed to a " + Calendar.class.getName() + " instance.</p>" + lineSeparator );
 
         getter.javadoc().addReturn().append(
             "The value of the jpa" + f.getPropertyInfo().getName( true ) + " property." );
@@ -1827,9 +1833,9 @@ public final class PluginImpl extends Plugin
             "Sets the value of the jpa" + f.getPropertyInfo().getName( true ) + " property." + lineSeparator );
 
         setter.javadoc().append(
-            "<p>This method sets the value of the " + f.getPropertyInfo().getName( false ) + " property by " +
-            "transforming {@code " + calendar.name() + "} to a " + XMLGregorianCalendar.class.getName() +
-            " instance.</p>" + lineSeparator );
+            "<p>This method sets the value of the " + f.getPropertyInfo().getName( false ) + " property by "
+            + "transforming {@code " + calendar.name() + "} to a " + XMLGregorianCalendar.class.getName()
+            + " instance.</p>" + lineSeparator );
 
         setter.javadoc().addParam( calendar ).append(
             "The new value of the jpa" + f.getPropertyInfo().getName( true ) + " property." );
@@ -1841,25 +1847,25 @@ public final class PluginImpl extends Plugin
         final JDefinedClass of = p.objectFactory();
 
         // createCalendar
-        final JMethod createCalendar = of.method( JMod.NONE | JMod.STATIC, cm.ref( Calendar.class ), "createCalendar" );
+        final JMethod createCalendar = of.method( JMod.STATIC, cm.ref( Calendar.class ), "createCalendar" );
         JVar value = createCalendar.param( JMod.FINAL, XMLGregorianCalendar.class, "value" );
         createCalendar.body().directStatement( "// " + getMessage( "title" ) );
         createCalendar.body()._return(
             JOp.cond( value.eq( JExpr._null() ), JExpr._null(), value.invoke( "toGregorianCalendar" ) ) );
 
-        createCalendar.javadoc().append( "Creates a " + Calendar.class.getName() + " instance from a " +
-                                         XMLGregorianCalendar.class.getName() + " instance." );
+        createCalendar.javadoc().append( "Creates a " + Calendar.class.getName() + " instance from a "
+                                         + XMLGregorianCalendar.class.getName() + " instance." );
 
         createCalendar.javadoc().addParam( value ).append(
             "The " + XMLGregorianCalendar.class.getName() + " instance or {@code null}." );
 
         createCalendar.javadoc().addReturn().append(
-            "A " + Calendar.class.getName() + " instance created from {@code " + value.name() +
-            "} or {@code null} if {@code " + value.name() + "} is {@code null}." );
+            "A " + Calendar.class.getName() + " instance created from {@code " + value.name()
+            + "} or {@code null} if {@code " + value.name() + "} is {@code null}." );
 
         // createXMLGregorianCalendar
         final JMethod createXMLGregorianCalendar =
-            of.method( JMod.NONE | JMod.STATIC, XMLGregorianCalendar.class, "createXMLGregorianCalendar" );
+            of.method( JMod.STATIC, XMLGregorianCalendar.class, "createXMLGregorianCalendar" );
 
         createXMLGregorianCalendar.body().directStatement( "// " + getMessage( "title" ) );
         value = createXMLGregorianCalendar.param( JMod.FINAL, Calendar.class, "value" );
@@ -1880,15 +1886,15 @@ public final class PluginImpl extends Plugin
         catchBlock.body()._throw( JExpr._new( cm.ref( AssertionError.class ) ).arg( catchBlock.param( "e" ) ) );
 
         createXMLGregorianCalendar.javadoc().append(
-            "Creates a " + XMLGregorianCalendar.class.getName() + " instance from a " + Calendar.class.getName() +
-            " instance." );
+            "Creates a " + XMLGregorianCalendar.class.getName() + " instance from a " + Calendar.class.getName()
+            + " instance." );
 
         createXMLGregorianCalendar.javadoc().addParam( value ).append(
             "The " + Calendar.class.getName() + " instance or {@code null}." );
 
         createXMLGregorianCalendar.javadoc().addReturn().append(
-            "A " + XMLGregorianCalendar.class.getName() + " instance created from {@code " + value.name() +
-            "} or {@code null} if {@code " + value.name() + "} is {@code null}." );
+            "A " + XMLGregorianCalendar.class.getName() + " instance created from {@code " + value.name()
+            + "} or {@code null} if {@code " + value.name() + "} is {@code null}." );
 
     }
 
@@ -3138,8 +3144,8 @@ public final class PluginImpl extends Plugin
         {
             return null;
         }
-        else if ( type.getOwnerSchema().getTargetNamespace().equals( XMLConstants.W3C_XML_SCHEMA_NS_URI ) &&
-                  name.equals( type.getName() ) )
+        else if ( type.getOwnerSchema().getTargetNamespace().equals( XMLConstants.W3C_XML_SCHEMA_NS_URI )
+                  && name.equals( type.getName() ) )
         {
             return type;
         }
