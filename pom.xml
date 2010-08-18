@@ -36,7 +36,7 @@
   <artifactId>jpa-xjc-plugin</artifactId>
   <packaging>jar</packaging>
   <name>JPA-XJC</name>
-  <version>1.0.1</version>
+  <version>1.0.2-SNAPSHOT</version>
   <description>JAXB 2.1 Schema to Java compiler plugin for annotating schema derived classes with Java persistence annotations.</description>
   <url>http://jpaxjc.sourceforge.net</url>
   <inceptionYear>2009</inceptionYear>
@@ -85,9 +85,9 @@
     </mailingList>
   </mailingLists>
   <scm>
-    <connection>scm:svn:https://jpaxjc.svn.sourceforge.net/svnroot/jpaxjc/tags/jpa-xjc-plugin-1.0.1</connection>
-    <developerConnection>scm:svn:https://jpaxjc.svn.sourceforge.net/svnroot/jpaxjc/tags/jpa-xjc-plugin-1.0.1</developerConnection>
-    <url>http://jpaxjc.svn.sourceforge.net/viewvc/jpaxjc/tags/jpa-xjc-plugin-1.0.1</url>
+    <connection>scm:svn:https://jpaxjc.svn.sourceforge.net/svnroot/jpaxjc/trunk</connection>
+    <developerConnection>scm:svn:https://jpaxjc.svn.sourceforge.net/svnroot/jpaxjc/trunk</developerConnection>
+    <url>http://jpaxjc.svn.sourceforge.net/viewvc/jpaxjc/trunk</url>
   </scm>
   <build>
     <resources>
