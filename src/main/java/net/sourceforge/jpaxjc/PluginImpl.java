@@ -334,8 +334,6 @@ public final class PluginImpl extends Plugin
                 this.addMandatoryAttributes( orm, e.getAttributes(), this.getClassOutline( model, e.getClazz() ) );
             }
 
-            this.annotate( model, orm );
-
             final Persistence p = new Persistence();
             final Persistence.PersistenceUnit u = new Persistence.PersistenceUnit();
             u.setName( this.persistenceUnitName );
@@ -344,36 +342,32 @@ public final class PluginImpl extends Plugin
 
             this.customizePersistenceUnit( model.getModel().getCustomizations(), u );
 
-            for ( Iterator<Entity> it = orm.getEntity().iterator(); it.hasNext(); )
+            for ( Entity e : orm.getEntity() )
             {
-                final Entity e = it.next();
                 if ( !u.getClazz().contains( e.getClazz() ) )
                 {
                     u.getClazz().add( e.getClazz() );
                 }
-
-                it.remove();
             }
-            for ( Iterator<Embeddable> it = orm.getEmbeddable().iterator(); it.hasNext(); )
+            for ( Embeddable e : orm.getEmbeddable() )
             {
-                final Embeddable e = it.next();
                 if ( !u.getClazz().contains( e.getClazz() ) )
                 {
                     u.getClazz().add( e.getClazz() );
                 }
-
-                it.remove();
             }
-            for ( Iterator<MappedSuperclass> it = orm.getMappedSuperclass().iterator(); it.hasNext(); )
+            for ( MappedSuperclass m : orm.getMappedSuperclass() )
             {
-                final MappedSuperclass e = it.next();
-                if ( !u.getClazz().contains( e.getClazz() ) )
+                if ( !u.getClazz().contains( m.getClazz() ) )
                 {
-                    u.getClazz().add( e.getClazz() );
+                    u.getClazz().add( m.getClazz() );
                 }
-
-                it.remove();
             }
+
+            this.annotate( model, orm );
+            orm.getEmbeddable().clear();
+            orm.getEntity().clear();
+            orm.getMappedSuperclass().clear();
 
             final SchemaFactory schemaFactory = SchemaFactory.newInstance( XMLConstants.W3C_XML_SCHEMA_NS_URI );
             final Schema persistenceSchema =
@@ -411,7 +405,10 @@ public final class PluginImpl extends Plugin
                  || orm.getSchema() != null
                  || !orm.getSequenceGenerator().isEmpty()
                  || !orm.getSqlResultSetMapping().isEmpty()
-                 || !orm.getTableGenerator().isEmpty() )
+                 || !orm.getTableGenerator().isEmpty()
+                 || !orm.getEmbeddable().isEmpty()
+                 || !orm.getEntity().isEmpty()
+                 || !orm.getMappedSuperclass().isEmpty() )
             {
                 final File ormFile = new File( metaInf, this.persistenceUnitName + ".xml" );
                 this.log( Level.INFO, "writing", ormFile.getAbsolutePath() );
@@ -530,6 +527,10 @@ public final class PluginImpl extends Plugin
     private void toEntity( final Outline outline, final ClassOutline c, final Entity entity )
         throws JAXBException
     {
+        if ( entity.getAccess() == null )
+        {
+            entity.setAccess( AccessType.PROPERTY );
+        }
         if ( entity.getClazz() == null )
         {
             entity.setClazz( c.implClass.binaryName() );
@@ -551,10 +552,7 @@ public final class PluginImpl extends Plugin
             entity.setAttributes( new Attributes() );
         }
 
-        for ( FieldOutline f : c.getDeclaredFields() )
-        {
-            this.toAttributes( outline, f, entity.getAttributes() );
-        }
+        this.toAttributes( outline, c, entity.getAttributes() );
 
         this.customizeEntity( c.target.getCustomizations(), entity );
     }
@@ -575,10 +573,7 @@ public final class PluginImpl extends Plugin
             embeddable.setAttributes( new EmbeddableAttributes() );
         }
 
-        for ( FieldOutline f : c.getDeclaredFields() )
-        {
-            this.toEmbeddableAttributes( f, embeddable.getAttributes() );
-        }
+        this.toEmbeddableAttributes( c, embeddable.getAttributes() );
 
         this.customizeEmbeddable( c.target.getCustomizations(), embeddable );
     }
@@ -589,7 +584,7 @@ public final class PluginImpl extends Plugin
     {
         if ( mappedSuperclass.getAccess() == null )
         {
-            mappedSuperclass.setAccess( AccessType.FIELD );
+            mappedSuperclass.setAccess( AccessType.PROPERTY );
         }
         if ( mappedSuperclass.getClazz() == null )
         {
@@ -600,261 +595,282 @@ public final class PluginImpl extends Plugin
             mappedSuperclass.setAttributes( new Attributes() );
         }
 
-        for ( FieldOutline f : c.getDeclaredFields() )
-        {
-            this.toAttributes( outline, f, mappedSuperclass.getAttributes() );
-        }
+        this.toAttributes( outline, c, mappedSuperclass.getAttributes() );
 
         this.customizeMappedSuperclass( c.target.getCustomizations(), mappedSuperclass );
     }
 
-    private void toAttributes( final Outline outline, final FieldOutline f, final Attributes attributes )
+    private void toAttributes( final Outline outline, final ClassOutline c, final Attributes attributes )
         throws JAXBException
     {
-        boolean mapped = false;
-
-        if ( f.getPropertyInfo().getCustomizations().find( ORM_NS, "id" ) != null )
+        if ( c.target.declaresAttributeWildcard() )
         {
-            final CPluginCustomization pc = f.getPropertyInfo().getCustomizations().find( ORM_NS, "id" );
-            final Id id = JAXB.unmarshal( new DOMSource( pc.element ), Id.class );
-
-            if ( id.getName() == null )
-            {
-                id.setName( f.getPropertyInfo().getName( false ) );
-            }
-
-            attributes.getId().add( id );
-            mapped = true;
-
-            final Column defaultColumn =
-                this.applySchemaDefaults( f.getPropertyInfo().getSchemaComponent(), id.getColumn() );
-
-            id.setColumn( defaultColumn );
-
-            if ( !pc.isAcknowledged() )
-            {
-                pc.markAsAcknowledged();
-            }
-        }
-
-        if ( f.getPropertyInfo().getCustomizations().find( ORM_NS, "basic" ) != null )
-        {
-            final CPluginCustomization pc = f.getPropertyInfo().getCustomizations().find( ORM_NS, "basic" );
-            final Basic basic = JAXB.unmarshal( new DOMSource( pc.element ), Basic.class );
-
-            if ( basic.getName() == null )
-            {
-                basic.setName( f.getPropertyInfo().getName( false ) );
-            }
-
-            attributes.getBasic().add( basic );
-            mapped = true;
-
-            if ( !pc.isAcknowledged() )
-            {
-                pc.markAsAcknowledged();
-            }
-
-            final Column defaultColumn =
-                this.applySchemaDefaults( f.getPropertyInfo().getSchemaComponent(), basic.getColumn() );
-
-            basic.setColumn( defaultColumn );
-        }
-
-        if ( f.getPropertyInfo().getCustomizations().find( ORM_NS, "version" ) != null )
-        {
-            final CPluginCustomization pc = f.getPropertyInfo().getCustomizations().find( ORM_NS, "version" );
-            final Version version = JAXB.unmarshal( new DOMSource( pc.element ), Version.class );
-
-            if ( version.getName() == null )
-            {
-                version.setName( f.getPropertyInfo().getName( false ) );
-            }
-
-            attributes.getVersion().add( version );
-            mapped = true;
-
-            if ( !pc.isAcknowledged() )
-            {
-                pc.markAsAcknowledged();
-            }
-
-            final Column defaultColumn =
-                this.applySchemaDefaults( f.getPropertyInfo().getSchemaComponent(), version.getColumn() );
-
-            version.setColumn( defaultColumn );
-        }
-
-        if ( f.getPropertyInfo().getCustomizations().find( ORM_NS, "many-to-one" ) != null )
-        {
-            final CPluginCustomization pc = f.getPropertyInfo().getCustomizations().find( ORM_NS, "many-to-one" );
-            final ManyToOne m = JAXB.unmarshal( new DOMSource( pc.element ), ManyToOne.class );
-
-            if ( m.getName() == null )
-            {
-                m.setName( f.getPropertyInfo().getName( false ) );
-            }
-
-            attributes.getManyToOne().add( m );
-            mapped = true;
-
-            if ( !pc.isAcknowledged() )
-            {
-                pc.markAsAcknowledged();
-            }
-        }
-
-        if ( f.getPropertyInfo().getCustomizations().find( ORM_NS, "one-to-many" ) != null )
-        {
-            final CPluginCustomization pc = f.getPropertyInfo().getCustomizations().find( ORM_NS, "one-to-many" );
-            final OneToMany o = JAXB.unmarshal( new DOMSource( pc.element ), OneToMany.class );
-
-            if ( o.getName() == null )
-            {
-                o.setName( f.getPropertyInfo().getName( false ) );
-            }
-
-            attributes.getOneToMany().add( o );
-
-            this.generateCollectionSetter( f.parent().parent().getCodeModel(), f.parent(), f.getPropertyInfo() );
-            mapped = true;
-
-            if ( !pc.isAcknowledged() )
-            {
-                pc.markAsAcknowledged();
-            }
-        }
-
-        if ( f.getPropertyInfo().getCustomizations().find( ORM_NS, "one-to-one" ) != null )
-        {
-            final CPluginCustomization pc = f.getPropertyInfo().getCustomizations().find( ORM_NS, "one-to-one" );
-            final OneToOne o = JAXB.unmarshal( new DOMSource( pc.element ), OneToOne.class );
-
-            if ( o.getName() == null )
-            {
-                o.setName( f.getPropertyInfo().getName( false ) );
-            }
-
-            attributes.getOneToOne().add( o );
-            mapped = true;
-
-            if ( !pc.isAcknowledged() )
-            {
-                pc.markAsAcknowledged();
-            }
-        }
-
-        if ( f.getPropertyInfo().getCustomizations().find( ORM_NS, "many-to-many" ) != null )
-        {
-            final CPluginCustomization pc = f.getPropertyInfo().getCustomizations().find( ORM_NS, "many-to-many" );
-            final ManyToMany m = JAXB.unmarshal( new DOMSource( pc.element ), ManyToMany.class );
-
-            if ( m.getName() == null )
-            {
-                m.setName( f.getPropertyInfo().getName( false ) );
-            }
-
-            attributes.getManyToMany().add( m );
-
-            this.generateCollectionSetter( f.parent().parent().getCodeModel(), f.parent(), f.getPropertyInfo() );
-            mapped = true;
-
-            if ( !pc.isAcknowledged() )
-            {
-                pc.markAsAcknowledged();
-            }
-        }
-
-        if ( f.getPropertyInfo().getCustomizations().find( ORM_NS, "embedded" ) != null )
-        {
-            final CPluginCustomization pc = f.getPropertyInfo().getCustomizations().find( ORM_NS, "embedded" );
-            final Embedded e = JAXB.unmarshal( new DOMSource( pc.element ), Embedded.class );
-
-            if ( e.getName() == null )
-            {
-                e.setName( f.getPropertyInfo().getName( false ) );
-            }
-
-            attributes.getEmbedded().add( e );
-            mapped = true;
-
-            if ( !pc.isAcknowledged() )
-            {
-                pc.markAsAcknowledged();
-            }
-        }
-
-        if ( f.getPropertyInfo().getCustomizations().find( ORM_NS, "transient" ) != null )
-        {
-            final CPluginCustomization pc = f.getPropertyInfo().getCustomizations().find( ORM_NS, "transient" );
-            final Transient t = JAXB.unmarshal( new DOMSource( pc.element ), Transient.class );
-
-            if ( t.getName() == null )
-            {
-                t.setName( f.getPropertyInfo().getName( false ) );
-            }
-
+            final Transient t = new Transient();
+            t.setName( "otherAttributes" );
             attributes.getTransient().add( t );
-            mapped = true;
 
-            if ( !pc.isAcknowledged() )
-            {
-                pc.markAsAcknowledged();
-            }
+            this.log( Level.WARNING, "cannotMapProperty", "OtherAttributes", c.implClass.binaryName() );
         }
 
-        if ( !mapped )
+        for ( FieldOutline f : c.getDeclaredFields() )
         {
-            mapped = this.toDefaultAttribute( outline, f, attributes );
+            boolean mapped = false;
+
+            if ( f.getPropertyInfo().getCustomizations().find( ORM_NS, "id" ) != null )
+            {
+                final CPluginCustomization pc = f.getPropertyInfo().getCustomizations().find( ORM_NS, "id" );
+                final Id id = JAXB.unmarshal( new DOMSource( pc.element ), Id.class );
+
+                if ( id.getName() == null )
+                {
+                    id.setName( f.getPropertyInfo().getName( false ) );
+                }
+
+                attributes.getId().add( id );
+                mapped = true;
+
+                final Column defaultColumn =
+                    this.applySchemaDefaults( f.getPropertyInfo().getSchemaComponent(), id.getColumn() );
+
+                id.setColumn( defaultColumn );
+
+                if ( !pc.isAcknowledged() )
+                {
+                    pc.markAsAcknowledged();
+                }
+            }
+
+            if ( f.getPropertyInfo().getCustomizations().find( ORM_NS, "basic" ) != null )
+            {
+                final CPluginCustomization pc = f.getPropertyInfo().getCustomizations().find( ORM_NS, "basic" );
+                final Basic basic = JAXB.unmarshal( new DOMSource( pc.element ), Basic.class );
+
+                if ( basic.getName() == null )
+                {
+                    basic.setName( f.getPropertyInfo().getName( false ) );
+                }
+
+                attributes.getBasic().add( basic );
+                mapped = true;
+
+                if ( !pc.isAcknowledged() )
+                {
+                    pc.markAsAcknowledged();
+                }
+
+                final Column defaultColumn =
+                    this.applySchemaDefaults( f.getPropertyInfo().getSchemaComponent(), basic.getColumn() );
+
+                basic.setColumn( defaultColumn );
+            }
+
+            if ( f.getPropertyInfo().getCustomizations().find( ORM_NS, "version" ) != null )
+            {
+                final CPluginCustomization pc = f.getPropertyInfo().getCustomizations().find( ORM_NS, "version" );
+                final Version version = JAXB.unmarshal( new DOMSource( pc.element ), Version.class );
+
+                if ( version.getName() == null )
+                {
+                    version.setName( f.getPropertyInfo().getName( false ) );
+                }
+
+                attributes.getVersion().add( version );
+                mapped = true;
+
+                if ( !pc.isAcknowledged() )
+                {
+                    pc.markAsAcknowledged();
+                }
+
+                final Column defaultColumn =
+                    this.applySchemaDefaults( f.getPropertyInfo().getSchemaComponent(), version.getColumn() );
+
+                version.setColumn( defaultColumn );
+            }
+
+            if ( f.getPropertyInfo().getCustomizations().find( ORM_NS, "many-to-one" ) != null )
+            {
+                final CPluginCustomization pc = f.getPropertyInfo().getCustomizations().find( ORM_NS, "many-to-one" );
+                final ManyToOne m = JAXB.unmarshal( new DOMSource( pc.element ), ManyToOne.class );
+
+                if ( m.getName() == null )
+                {
+                    m.setName( f.getPropertyInfo().getName( false ) );
+                }
+
+                attributes.getManyToOne().add( m );
+                mapped = true;
+
+                if ( !pc.isAcknowledged() )
+                {
+                    pc.markAsAcknowledged();
+                }
+            }
+
+            if ( f.getPropertyInfo().getCustomizations().find( ORM_NS, "one-to-many" ) != null )
+            {
+                final CPluginCustomization pc = f.getPropertyInfo().getCustomizations().find( ORM_NS, "one-to-many" );
+                final OneToMany o = JAXB.unmarshal( new DOMSource( pc.element ), OneToMany.class );
+
+                if ( o.getName() == null )
+                {
+                    o.setName( f.getPropertyInfo().getName( false ) );
+                }
+
+                attributes.getOneToMany().add( o );
+
+                this.generateCollectionSetter( f.parent().parent().getCodeModel(), f.parent(), f.getPropertyInfo() );
+                mapped = true;
+
+                if ( !pc.isAcknowledged() )
+                {
+                    pc.markAsAcknowledged();
+                }
+            }
+
+            if ( f.getPropertyInfo().getCustomizations().find( ORM_NS, "one-to-one" ) != null )
+            {
+                final CPluginCustomization pc = f.getPropertyInfo().getCustomizations().find( ORM_NS, "one-to-one" );
+                final OneToOne o = JAXB.unmarshal( new DOMSource( pc.element ), OneToOne.class );
+
+                if ( o.getName() == null )
+                {
+                    o.setName( f.getPropertyInfo().getName( false ) );
+                }
+
+                attributes.getOneToOne().add( o );
+                mapped = true;
+
+                if ( !pc.isAcknowledged() )
+                {
+                    pc.markAsAcknowledged();
+                }
+            }
+
+            if ( f.getPropertyInfo().getCustomizations().find( ORM_NS, "many-to-many" ) != null )
+            {
+                final CPluginCustomization pc = f.getPropertyInfo().getCustomizations().find( ORM_NS, "many-to-many" );
+                final ManyToMany m = JAXB.unmarshal( new DOMSource( pc.element ), ManyToMany.class );
+
+                if ( m.getName() == null )
+                {
+                    m.setName( f.getPropertyInfo().getName( false ) );
+                }
+
+                attributes.getManyToMany().add( m );
+
+                this.generateCollectionSetter( f.parent().parent().getCodeModel(), f.parent(), f.getPropertyInfo() );
+                mapped = true;
+
+                if ( !pc.isAcknowledged() )
+                {
+                    pc.markAsAcknowledged();
+                }
+            }
+
+            if ( f.getPropertyInfo().getCustomizations().find( ORM_NS, "embedded" ) != null )
+            {
+                final CPluginCustomization pc = f.getPropertyInfo().getCustomizations().find( ORM_NS, "embedded" );
+                final Embedded e = JAXB.unmarshal( new DOMSource( pc.element ), Embedded.class );
+
+                if ( e.getName() == null )
+                {
+                    e.setName( f.getPropertyInfo().getName( false ) );
+                }
+
+                attributes.getEmbedded().add( e );
+                mapped = true;
+
+                if ( !pc.isAcknowledged() )
+                {
+                    pc.markAsAcknowledged();
+                }
+            }
+
+            if ( f.getPropertyInfo().getCustomizations().find( ORM_NS, "transient" ) != null )
+            {
+                final CPluginCustomization pc = f.getPropertyInfo().getCustomizations().find( ORM_NS, "transient" );
+                final Transient t = JAXB.unmarshal( new DOMSource( pc.element ), Transient.class );
+
+                if ( t.getName() == null )
+                {
+                    t.setName( f.getPropertyInfo().getName( false ) );
+                }
+
+                attributes.getTransient().add( t );
+                mapped = true;
+
+                if ( !pc.isAcknowledged() )
+                {
+                    pc.markAsAcknowledged();
+                }
+            }
+
+            if ( !mapped )
+            {
+                this.toDefaultAttribute( outline, f, attributes );
+            }
         }
     }
 
-    private void toEmbeddableAttributes( final FieldOutline f, final EmbeddableAttributes attributes )
+    private void toEmbeddableAttributes( final ClassOutline c, final EmbeddableAttributes attributes )
         throws JAXBException
     {
-        boolean mapped = false;
-
-        if ( f.getPropertyInfo().getCustomizations().find( ORM_NS, "basic" ) != null )
+        if ( c.target.declaresAttributeWildcard() )
         {
-            final CPluginCustomization pc = f.getPropertyInfo().getCustomizations().find( ORM_NS, "basic" );
-            final Basic basic = JAXB.unmarshal( new DOMSource( pc.element ), Basic.class );
-
-            if ( basic.getName() == null )
-            {
-                basic.setName( f.getPropertyInfo().getName( false ) );
-            }
-
-            attributes.getBasic().add( basic );
-            mapped = true;
-
-            if ( !pc.isAcknowledged() )
-            {
-                pc.markAsAcknowledged();
-            }
-        }
-
-        if ( f.getPropertyInfo().getCustomizations().find( ORM_NS, "transient" ) != null )
-        {
-            final CPluginCustomization pc = f.getPropertyInfo().getCustomizations().find( ORM_NS, "transient" );
-            final Transient t = JAXB.unmarshal( new DOMSource( pc.element ), Transient.class );
-
-            if ( t.getName() == null )
-            {
-                t.setName( f.getPropertyInfo().getName( false ) );
-            }
-
+            final Transient t = new Transient();
+            t.setName( "otherAttributes" );
             attributes.getTransient().add( t );
-            mapped = true;
 
-            if ( !pc.isAcknowledged() )
-            {
-                pc.markAsAcknowledged();
-            }
+            this.log( Level.WARNING, "cannotMapProperty", "OtherAttributes", c.implClass.binaryName() );
         }
 
-        if ( !mapped )
+        for ( FieldOutline f : c.getDeclaredFields() )
         {
-            mapped = this.toDefaultAttribute( f, attributes );
+            boolean mapped = false;
+
+            if ( f.getPropertyInfo().getCustomizations().find( ORM_NS, "basic" ) != null )
+            {
+                final CPluginCustomization pc = f.getPropertyInfo().getCustomizations().find( ORM_NS, "basic" );
+                final Basic basic = JAXB.unmarshal( new DOMSource( pc.element ), Basic.class );
+
+                if ( basic.getName() == null )
+                {
+                    basic.setName( f.getPropertyInfo().getName( false ) );
+                }
+
+                attributes.getBasic().add( basic );
+                mapped = true;
+
+                if ( !pc.isAcknowledged() )
+                {
+                    pc.markAsAcknowledged();
+                }
+            }
+
+            if ( f.getPropertyInfo().getCustomizations().find( ORM_NS, "transient" ) != null )
+            {
+                final CPluginCustomization pc = f.getPropertyInfo().getCustomizations().find( ORM_NS, "transient" );
+                final Transient t = JAXB.unmarshal( new DOMSource( pc.element ), Transient.class );
+
+                if ( t.getName() == null )
+                {
+                    t.setName( f.getPropertyInfo().getName( false ) );
+                }
+
+                attributes.getTransient().add( t );
+                mapped = true;
+
+                if ( !pc.isAcknowledged() )
+                {
+                    pc.markAsAcknowledged();
+                }
+            }
+
+            if ( !mapped )
+            {
+                this.toDefaultAttribute( f, attributes );
+            }
         }
     }
 

@@ -47,20 +47,20 @@ JPA-XJC
   the XJC classpath. When enabled, the following options can be used to control
   the behavior of the plugin.
 
-    * -jpa <unit-name> <unit-root>
+** -jpa <unit-name> <unit-root>
 
     The '-jpa' option itself takes two mandatory arguments. The '<unit-name>'
     argument specifies the name of the persistence unit and the '<unit-root>'
     argument specifies the name of the persistence unit root directory.
 
-    * -persistenceSystemId (since 1.0-beta-6)
+** -persistenceSystemId <system-id> (since 1.0-beta-6)
 
     The optional '-persistenceSystemId' option can be used to specify a system id
     to use in the 'schemaLocation' attribute of generated persistence unit XML
     documents.
     Default: http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd
 
-    * -ormSystemId (since 1.0-beta-6)
+** -ormSystemId <system-id> (since 1.0-beta-6)
 
     The optional '-ormSystemId' option can be used to specify a system id to use in
     the 'schemaLocation' attribute of generated orm XML documents.
