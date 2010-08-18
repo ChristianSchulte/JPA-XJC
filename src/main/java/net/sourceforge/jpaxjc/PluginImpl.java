@@ -138,6 +138,7 @@ import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -1748,13 +1749,15 @@ public final class PluginImpl extends Plugin
     // --
     // Code generation methods.
     // --
-    private void generateProperty( final String name, final Class type, final ClassOutline c )
+    private void generateProperty( final String name, final Class<?> type, final ClassOutline c )
     {
         final char[] chars = name.toCharArray();
         chars[0] = Character.toUpperCase( chars[0] );
         final String publicName = String.valueOf( chars );
         final String getterName = ( type == Boolean.TYPE || type == Boolean.class ? "is" : "get" ) + publicName;
         final JFieldVar field = c.implClass.field( JMod.PROTECTED, type, name );
+        field.annotate( XmlTransient.class );
+
         final JMethod getter = c.implClass.method( JMod.PUBLIC, type, getterName );
         getter.body().directStatement( "// " + getMessage( "title" ) );
         getter.body()._return( field );
